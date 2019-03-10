@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.OrderDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Order" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="VARCHAR" />
+    <result column="doctor_id" property="doctorId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="doctor_name" property="doctorName" jdbcType="VARCHAR" />
+    <result column="doctor_mobile" property="doctorMobile" jdbcType="VARCHAR" />
+    <result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+    <result column="patient_mobile" property="patientMobile" jdbcType="VARCHAR" />
+    <result column="patient_id_card" property="patientIdCard" jdbcType="VARCHAR" />
+    <result column="appointment_time" property="appointmentTime" jdbcType="DATE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="appointment_fee" property="appointmentFee" jdbcType="DECIMAL" />
+    <result column="treat_fee" property="treatFee" jdbcType="DECIMAL" />
+    <result column="resut_desc" property="resutDesc" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_order
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.Order" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_order (order_code, patient_id, doctor_id, 
+      department_id, doctor_name, doctor_mobile, 
+      patient_name, patient_mobile, patient_id_card, 
+      appointment_time, remark, appointment_fee, 
+      treat_fee, resut_desc, score, 
+      evaluate, "status", status_desc, 
+      create_time, last_update_time)
+    values (#{orderCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, #{doctorMobile,jdbcType=VARCHAR}, 
+      #{patientName,jdbcType=VARCHAR}, #{patientMobile,jdbcType=VARCHAR}, #{patientIdCard,jdbcType=VARCHAR}, 
+      #{appointmentTime,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, #{appointmentFee,jdbcType=DECIMAL}, 
+      #{treatFee,jdbcType=DECIMAL}, #{resutDesc,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
+      #{evaluate,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{statusDesc,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Order" >
+    update h_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      patient_id = #{patientId,jdbcType=VARCHAR},
+      doctor_id = #{doctorId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=VARCHAR},
+      doctor_name = #{doctorName,jdbcType=VARCHAR},
+      doctor_mobile = #{doctorMobile,jdbcType=VARCHAR},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+      patient_id_card = #{patientIdCard,jdbcType=VARCHAR},
+      appointment_time = #{appointmentTime,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR},
+      appointment_fee = #{appointmentFee,jdbcType=DECIMAL},
+      treat_fee = #{treatFee,jdbcType=DECIMAL},
+      resut_desc = #{resutDesc,jdbcType=VARCHAR},
+      score = #{score,jdbcType=INTEGER},
+      evaluate = #{evaluate,jdbcType=VARCHAR},
+      "status" = #{status,jdbcType=VARCHAR},
+      status_desc = #{statusDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
+    patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
+    treat_fee, resut_desc, score, evaluate, "status", status_desc, create_time, last_update_time
+    from h_order
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
+    patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
+    treat_fee, resut_desc, score, evaluate, "status", status_desc, create_time, last_update_time
+    from h_order
+  </select>
+</mapper>

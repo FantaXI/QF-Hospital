@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文章列表--layui后台管理模板 2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;">
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <div class="myImage" style="border:1px solid #0C0C0C; width:185px; height:185px;margin : 0px 0px 0px 110px;;">
+            <img class="layui-upload-img" id="demo1" style="width: auto;height: auto;max-width: 100%;max-height: 100%;" >
+        </div>
+        <label class="layui-form-label">头像</label>
+        <div class="layui-upload-list">
+            <button type="button" class="layui-btn layui-btn-normal" id="selectPic">选择图片</button>
+            <button type="button" class="layui-btn" id="uploadPic">确认更改</button>
+        </div>
+    </div>
+    <div class="magb15 layui-col-md12 layui-col-xs12">
+        <label class="layui-form-label">疾病大类</label>
+        <div class="layui-input-block">
+            <select id="typeClass" name="typeClass" class="typeClass" lay-filter="typeClass">
+
+            </select>
+        </div>
+    </div>
+    <div class="magb15 layui-col-md4 layui-col-xs12">
+        <label class="layui-form-label">科室大类</label>
+        <div class="layui-input-block">
+            <select id="departmentClass" name="departmentClass" class="departmentClass" lay-filter="departmentClass" >
+
+            </select>
+        </div>
+    </div>
+    <div class="magb15 layui-col-md4 layui-col-xs12">
+        <label class="layui-form-label">所属科室</label>
+        <div class="layui-input-block">
+            <select id="department" name="department" class="department" lay-filter="department" >
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">疾病名称*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input diseaseName" lay-verify="required" placeholder="请输入疾病名称">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">疾病描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入疾病描述" class="layui-textarea diseaseDesc"></textarea>
+        </div>
+    </div>
+    <input type="hidden" class="layui-input diseaseId" >
+    <input type="hidden" class="layui-input classId" >
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="editDisease">完成</button>
+            <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">取消</button>
+        </div>
+    </div>
+
+</form>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script th:inline="javascript">
+    layui.use(['form','layer','upload'],function() {
+        var form = layui.form
+        var strs2,strs1;
+        layer = parent.layer === undefined ? layui.layer : top.layer,
+            $ = layui.jquery;
+        var upload = layui.upload;
+//创建一个上传组件
+        upload.render({
+            elem: '#selectPic',
+            //url: /*[[@{/ftp/uploadPic}]]*/ ,
+            url: '/ftp/uploadPic',
+            auto: false,
+            data: {operate:'disease', id: $(".diseaseId").val()},
+            bindAction: '#uploadPic',
+            choose: function (obj) {
+                this.data = {operate:'disease', id: $(".diseaseId").val() };
+                var files = obj.pushFile();
+                //预览选中的文件（本地文件）
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result);
+                });
+            },
+            done: function (res, index, upload) { //上传后的回调
+                layer.msg("图片更改成功")
+            }
+
+        });
+        //从数据中获取疾病大类
+        $.ajax({
+            url: /*[[@{/admin/class/JB}]]*/,
+            dataType: 'json',
+            success: function (result) {
+                var workData = result.data;
+                console.log($(".classId").val());
+                for(var x in workData){
+                    if (workData[x].id==$(".classId").val()){
+                        strs1 += '<option selected value = "' + workData[x].id + '">' + workData[x].className + '</option>'
+
+                    }else{
+                        strs1 += '<option value = "' + workData[x].id + '">' + workData[x].className + '</option>'
+
+                    }
+                }
+                $("#typeClass").html(strs1);
+                form.render('select');
+            }
+        });
+        //从数据中获取科室大类
+        $.ajax({
+            url: /*[[@{/admin/class/KS}]]*/,
+            dataType: 'json',
+            success: function (result) {
+                var workData = result.data;
+                for(var x in workData){
+                        strs2 += '<option value = "' + workData[x].id + '">' + workData[x].className + '</option>'
+                }
+                $("#departmentClass").html(strs2);
+                updateDepartment("4");
+                form.render('select');
+            }
+        });
+        function updateDepartment(classId){
+            var strs3 = "";
+            var classId=classId;//获得选中的option的值
+            console.log(classId);//没啥用
+            var context = /*[[@{/}]]*/;
+            var path = context+"admin/listbyclass?classId="+classId;
+            console.log(path);
+            //根据classId获取科室大类下所有科室
+            $.ajax({
+                url: path,
+                dataType: 'json',
+                success: function (result) {
+                    var workData = result.data;
+                    for(var x in workData){
+                        strs3 += '<option value = "' + workData[x].id + '">' + workData[x].departmentName + '</option>'
+                    }
+                    $("#department").html(strs3);
+                    form.render('select');
+                }
+            });
+        }
+        // $("#departmentClass option[value='"+temp+"']").attr("selected","selected");
+
+        form.on('select(departmentClass)', function(data){
+            var classId=$("#departmentClass").val();//获得选中的option的值
+            updateDepartment(classId);
+
+        });
+        form.on("submit(editDisease)", function (data) {
+            //弹出loading
+            var index = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
+            alert($(".diseaseId").val());
+            $.post(/*[[@{/admin/editDisease}]]*/, {
+                id: $(".diseaseId").val(), //疾病id
+                diseaseName: $(".diseaseName").val(), //疾病名称
+                diseaseDesc: $(".diseaseDesc").val(),  //疾病描述
+                departmentId: data.field.department,  //科室id
+                classId: data.field.typeClass,  //疾病大类id
+            }, function (res) {
+
+                if (res.code < 0) {
+                    top.layer.msg(res.msg);
+                } else {
+                    top.layer.close(index);
+                    top.layer.msg("编辑成功！");
+                    layer.closeAll("iframe");
+                    //刷新父页面
+                    parent.location.reload();
+                }
+            })
+
+
+            return false;
+        })
+
+
+
+
+    })
+</script>
+</body>
+</html>

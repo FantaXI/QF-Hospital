@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+ 
+    <title>登录页</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
+<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
+<script src="/layui/layui.js"></script>
+ <style>
+     .login-main{
+         text-align: center; /*让div内部文字居中*/
+         background-color: #fff;
+         border-radius: 20px;
+         width: 210px;
+         height: 250px;
+         margin: auto;
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         border: solid #a3b8c4;
+         padding-top: 20px;
+     }
+     .login-btn{
+         margin-top: 10px;
+         margin-bottom: 10px;
+     }
+     .body1{
+         background-image:url("/login_background.jpg");
+         background-size: 100%;
+     }
+ </style>
+</head>
+<body class="body1">
+
+
+<div class="login-main">
+    <header class="layui-elip">欢迎登录清风医院</header>
+    <form class="layui-form">
+        <div class="layui-input-inline login-btn">
+            <input type="text" name="mobile" required lay-verify="required" placeholder="手机号码" autocomplete="off"
+                   class="layui-input">
+        </div>
+        <div class="layui-input-inline login-btn">
+            <input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off"
+                   class="layui-input">
+        </div>
+        <div class="layui-input-inline login-btn">
+            <button lay-submit lay-filter="login" class="layui-btn">登录</button>
+        </div>
+        <hr/>
+        <!--<div class="layui-input-inline">
+            <button type="button" class="layui-btn layui-btn-primary">QQ登录</button>
+        </div>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn layui-btn-normal">微信登录</button>
+        </div>-->
+        <p><a href="/register">立即注册</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:;" >忘记密码？</a></p>
+    </form>
+</div>
+<script type="text/javascript">
+    layui.use(['form','layer','jquery'], function () {
+ 
+        // 操作对象
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.on('submit(login)',function (data) {
+            // console.log(data.field);
+            $.ajax({
+                url:'userLogin',
+                data:data.field,
+                dataType:'text',
+                type:'post',
+                success:function (data) {
+                	var obj = JSON.parse(data);  
+                	var errorCode = obj.errorCode;
+                    if (errorCode == 1){
+                        if (obj.errorCode == 1){
+                            if (obj.objectResult == "2") {
+                                layer.msg('即将进入医生管理界面',{time:1000},function () {
+                                    window.location.href = '';
+                                });
+                            }else if(obj.objectResult == "3"){
+                                layer.msg('即将进入管理员界面',{time:1000},function () {
+                                    window.location.href = 'admin/home';
+                                });
+                            }else {
+                                layer.msg('登录成功,即将进入首页',{time:1000},function () {
+                                    window.location.href = 'home/main';
+                                });
+                            }
+                        }
+                    }else{
+                        layer.msg('登录名或密码错误');
+                    }
+                }
+            })
+            return false;
+        })
+ 
+    });
+</script>
+</body>
+</html>

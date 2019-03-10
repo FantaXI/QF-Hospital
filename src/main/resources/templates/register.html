@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
+</head>
+<style>
+    body {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    font-family: "微软雅黑"
+}
+
+.layui-nav .layui-nav-item {
+    position: relative;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+    line-height: 40px;
+    margin: 0px 40px;
+}
+
+.layui-col-md3 span {
+    display: block;
+    background: #f4f6fa;
+    color: #fec009;
+    padding-left: 30px;
+    line-height: 40px;
+    font-size: 18px;
+}
+
+.layui-col-md9 p {
+    line-height: 30px;
+    color: #999999;
+}
+
+.layui-col-md9 span {
+    display: block;
+    background: #f4f6fa;
+    color: #fec009;
+    padding-left: 30px;
+    line-height: 40px;
+}
+
+.layui-col-md9 section {
+    background: #fff;
+}
+
+.wrap {
+    width: 1130px;
+    margin: 0px auto;
+}
+
+.logo {
+    margin: 10px 0px;
+}
+
+.header {
+    line-height: 30px;
+    background: #eeeeee;
+}
+
+.footer {
+    background-color: #f6f6f6;
+    text-align: center;
+    padding: 20px 0px;
+}
+
+.main{border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;
+}
+    .middle{
+        width: 600px;
+        height: 880px;
+
+        MARGIN-RIGHT: auto; MARGIN-LEFT: auto;
+    }
+    .content_top{
+        margin-top: 50px;
+        margin-bottom: 50px;
+        text-align: center;
+        font-size: 20px;
+        color: #B2B2B2;
+        font-weight: bold;
+        border: solid #a3b8c4;
+    }
+</style>
+<body class="childrenBody">
+<div class="header">
+    <div class='wrap'>
+        <p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
+        <div style="float: right">
+            <a href="">登录 </a>&nbsp;|&nbsp;&nbsp;<a href="">注册</a>
+        </div>
+        <div style='clear: both;'></div>
+    </div>
+</div>
+
+
+
+<div class="layui-container">
+    <div class="logo">
+        <img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+    </div>
+
+    <ul class="layui-nav layui-bg-green" lay-filter="">
+        <li></li>
+        <li class="layui-nav-item"><a href="main">首页</a></li>
+        <li class="layui-nav-item"><a href="">按科室预约</a></li>
+        <li class="layui-nav-item"><a href="">按疾病预约</a></li>
+        <li class="layui-nav-item "><a href="">公告资讯</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a href="">最新公告</a>
+                </dd>
+                <dd>
+                    <a href="">健康资讯</a>
+                </dd>
+            </dl></li>
+        <li class="layui-nav-item"><a href="">留言解答</a></li>
+        <li class="layui-nav-item"><a href="">个人中心</a></li>
+    </ul>
+    <!-- 正文-->
+<div class="middle">
+    <div class="content_top">
+      <p>新用户信息填写</p>
+    </div>
+<form class="layui-form" style="width:80%;">
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <div class="myImage" style="border:1px solid #0C0C0C; width:185px; height:185px;margin : 0px 0px 0px 110px;;">
+            <img class="layui-upload-img" id="demo1" style="width: auto;height: auto;max-width: 100%;max-height: 100%;">
+        </div>
+        <label class="layui-form-label">头像</label>
+        <div class="layui-upload-list">
+            <button type="button" class="layui-btn layui-btn-normal" id="uploadPic">选择图片</button>
+            <!--button type="button" class="layui-btn" id="uploadPic">确认更改</button-->
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">姓名*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userName" lay-verify="required" placeholder="请输入姓名">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">手机号码*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userMobile" lay-verify="phone" placeholder="请输入手机号码">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">邮箱*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userEmail" lay-verify="email" placeholder="请输入邮箱地址">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">密码*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userPassword" lay-verify="required" placeholder="请输入密码">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">身份证号*</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userIdCard" lay-verify="identity" placeholder="请输入身份证号">
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">性别*</label>
+            <div class="layui-input-block userSex">
+                <input type="radio" name="sex" value="男" title="男" checked>
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-block">
+                <input type="text" id="bornDate" class="layui-input userBornData" lay-verify="date" placeholder="请选择出生日期">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">常住地址</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input userAddress"  placeholder="请输入常住地址">
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="addUser">提交</button>
+            <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+<div class="footer">
+    <p>清风医院预约门诊统一平台</p>
+    <p>技术支持：XLQ</p>
+</div>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script th:inline="javascript">
+    layui.use(['form','layer','upload','laydate'],function() {
+        var form = layui.form
+        layer = parent.layer === undefined ? layui.layer : top.layer,
+            $ = layui.jquery;
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#bornDate' //指定元素
+        });
+        var upload = layui.upload
+        //创建一个上传组件
+        upload.render({
+            elem: '#uploadPic',
+            //url: /*[[@{/ftp/uploadPic}]]*/ ,
+            url: '/ftp/uploadPic',
+            auto: true,
+            data: {operate:'user'},
+            bindAction: '#uploadPic',
+            choose: function (obj) {
+                var files = obj.pushFile();
+                //预览选中的文件（本地文件）
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result);
+                });
+            },
+            done: function (res, index, upload) { //上传后的回调
+                $('#demo1').attr('src', res.data.src);
+            }
+
+        });
+
+        form.on("submit(addUser)", function (data) {
+            $.post(/*[[@{/user/register}]]*/, {
+                name: $(".userName").val(),  //姓名
+                mobile: $(".userMobile").val(), //手机号码
+                password: $(".userPassword").val(),
+                email: $(".userEmail").val(),
+                idCard: $(".userIdCard").val(),
+                address: $(".userAddress").val(),
+                bornData: $(".userBornData").val(),
+                email: $(".userEmail").val(),  //邮箱
+                sex: data.field.sex,  //性别
+                imageUrl: $("#demo1").attr("src"),
+            }, function (res) {
+                console.log(res);
+                if (res.code < 0) {
+                    layer.msg(res.msg);
+                } else {
+                    layer.msg("注册成功！即将跳到登录页",{time:2000},function () {
+                        window.location.href="/login";
+                    });
+
+                }
+            })
+
+
+            return false;
+        })
+    })
+</script>
+</body>
+</html>

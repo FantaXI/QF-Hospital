@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.CommentDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Comment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="main_id" property="mainId" jdbcType="VARCHAR" />
+    <result column="comment_type" property="commentType" jdbcType="VARCHAR" />
+    <result column="check_result" property="checkResult" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_comment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.Comment" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_comment (id,comment_content, user_id, user_name, 
+      main_id, comment_type, check_result, 
+      state
+      )
+    values (#{id,jdbcType=VARCHAR},#{commentContent,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{mainId,jdbcType=VARCHAR}, #{commentType,jdbcType=VARCHAR}, #{checkResult,jdbcType=VARCHAR}, 
+      #{state,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Comment" >
+    update h_comment
+    set comment_content = #{commentContent,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      main_id = #{mainId,jdbcType=VARCHAR},
+      comment_type = #{commentType,jdbcType=VARCHAR},
+      check_result = #{checkResult,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, comment_content, user_id, user_name, main_id, comment_type, check_result, 
+    state, create_time, last_update_time
+    from h_comment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, comment_content, user_id, user_name, main_id, comment_type, check_result, 
+    state, create_time, last_update_time
+    from h_comment
+  </select>
+  <select id="queryCommentByPage" parameterType="com.xlq.hospital.model.Comment"  resultMap="BaseResultMap" >
+    select id, comment_content, user_id, user_name, main_id, comment_type, check_result, state, create_time, last_update_time
+    from h_comment
+    <where>
+    	<if test="id!=null and id!=''">
+    		AND id = #{id}
+    	</if>
+    	<if test="commentContent!=null and commentContent!=''">
+    		AND comment_content = #{commentContent}
+    	</if>
+    	<if test="userId!=null and userId!=''">
+    		AND user_id = #{userId}
+    	</if>
+    	<if test="userName!=null and userName!=''">
+    		AND user_name = #{userName}
+    	</if>
+    	<if test="commentType!=null and commentType!=''">
+    		AND comment_type = #{commentType}
+    	</if>
+    	<if test="mainId!=null and mainId!=''">
+    		AND main_id = #{mainId}
+    	</if>
+    	<if test="checkResult!=null and checkResult!=''">
+    		AND check_result = #{checkResult}
+    	</if>
+    	<if test="state!=null and state!=''">
+    		AND state = #{state}
+    	</if>
+    </where>
+    ORDER BY create_time DESC
+  </select>
+  
+  <select id="queryCommentByPageCount" parameterType="com.xlq.hospital.model.Comment"  resultType="int" >
+    select count(1) from h_comment
+    <where>
+    	<if test="id!=null and id!=''">
+    		AND id = #{id}
+    	</if>
+    	<if test="commentContent!=null and commentContent!=''">
+    		AND comment_content = #{commentContent}
+    	</if>
+    	<if test="userId!=null and userId!=''">
+    		AND user_id = #{userId}
+    	</if>
+    	<if test="userName!=null and userName!=''">
+    		AND user_name = #{userName}
+    	</if>
+    	<if test="commentType!=null and commentType!=''">
+    		AND comment_type = #{commentType}
+    	</if>
+    	<if test="mainId!=null and mainId!=''">
+    		AND main_id = #{mainId}
+    	</if>
+    	<if test="checkResult!=null and checkResult!=''">
+    		AND check_result = #{checkResult}
+    	</if>
+    	<if test="state!=null and state!=''">
+    		AND state = #{state}
+    	</if>
+	 </where>
+  </select>
+</mapper>

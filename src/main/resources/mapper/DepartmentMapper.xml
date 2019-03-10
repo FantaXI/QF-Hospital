@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.DepartmentDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Department" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_desc" property="departmentDesc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="type_class_id" property="typeClassId" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_department
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.Department" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_department (id, class_id, department_name, department_desc,
+      image_url
+      )
+    values (#{id}, #{classId,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{departmentDesc,jdbcType=VARCHAR},
+      #{imageUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Department" >
+    update h_department
+    <set>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentDesc != null">
+        department_desc = #{departmentDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, class_id, department_name, department_desc, create_time, last_update_time, 
+    image_url
+    from h_department
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, class_id, department_name, department_desc, create_time, last_update_time, 
+    image_url
+    from h_department
+  </select>
+
+  <select id="queryDepartmentByClassId" parameterType="string" resultMap="BaseResultMap" >
+    select id, class_id, department_name, department_desc, create_time, last_update_time,
+    image_url
+    from h_department
+    where class_id = #{classId}
+  </select>
+
+  <select id="queryDepartmentByKey" resultMap="BaseResultMap" parameterType="string">
+    select hd.id, class_id, department_name, department_desc,
+    image_url,tc.id type_class_id,tc.class_name
+    from h_department hd
+		LEFT JOIN h_type_class tc
+		on hd.class_id = tc.id
+    <where>
+      <if test="key!=null">
+        and (hd.department_name like CONCAT('%',#{key},'%') or tc.class_name like CONCAT('%',#{key},'%'))
+      </if>
+    </where>
+  </select>
+</mapper>

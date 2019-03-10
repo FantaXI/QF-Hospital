@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>医生列表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
+    <script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script>
+
+
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            font-size: 12px;
+            font-family: "微软雅黑"
+        }
+
+        .layui-nav .layui-nav-item {
+            position: relative;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            vertical-align: middle;
+            line-height: 40px;
+            margin: 0px 40px;
+        }
+
+        .layui-col-md3 span {
+            display: block;
+            background: #f4f6fa;
+            color: #fec009;
+            padding-left: 30px;
+            line-height: 40px;
+            font-size: 18px;
+        }
+
+        .layui-col-md9 p {
+            line-height: 30px;
+            color: #999999;
+        }
+
+        .layui-col-md9 span {
+            display: block;
+            background: #f4f6fa;
+            color: #fec009;
+            padding-left: 30px;
+            line-height: 40px;
+        }
+
+        .layui-col-md9 section {
+            background: #fff;
+        }
+
+        .wrap {
+            width: 1130px;
+            margin: 0px auto;
+        }
+
+        .logo {
+            margin: 10px 0px;
+        }
+
+        .header {
+            line-height: 30px;
+            background: #eeeeee;
+        }
+
+        .footer {
+            background-color: #f6f6f6;
+            text-align: center;
+            padding: 20px 0px;
+        }
+
+        .main{border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;
+        }
+        .g-doctor-item2{
+            width: 300px;
+            height: 93px;
+            padding: 30px 20px 0;
+            border-right: 1px solid #f0f0f0;
+            margin: 0;
+            text-align: left;
+            position: relative;
+        }
+        .g-doctor-item1 {
+            margin-bottom: 20px;
+            border: 1px solid #f0f0f0;
+            position: relative;
+        }
+        .g-doctor-item3 {
+            width: 340px;
+            height: 93px;
+            padding: 30px 20px 0;
+            color: #888;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 20px;
+            border-right: 1px solid #f0f0f0;
+        }
+        .g-doctor-item4{
+            border-right: 1px solid #f0f0f0;
+            width: 250px;
+            height: 100px;
+            position: relative;
+            margin: 0;
+
+        }
+        .ksorder_box {
+            width: 1140px;
+            overflow: hidden;
+            background: #F7F7F7;
+            clear: both;
+            padding-bottom: 8px;
+        }
+        .ksorder_box_con_dl {
+            width: 695px;
+            /* height: 166px; */
+            font-size: 12px;
+            float: left;
+        }
+        </style>
+
+</head>
+
+
+<body>
+<div class="header">
+    <div class='wrap'>
+        <p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
+        <div style="float: right">
+            <a href="">登录 </a>&nbsp;|&nbsp;&nbsp;<a href="">注册</a>
+        </div>
+        <div style='clear: both;'></div>
+    </div>
+</div>
+
+
+
+<div class="layui-container">
+    <div class="logo">
+        <img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+    </div>
+
+    <ul class="layui-nav layui-bg-green" lay-filter="">
+        <li></li>
+        <li class="layui-nav-item"><a href="main">首页</a></li>
+        <li class="layui-nav-item layui-this"><a href="">按科室预约</a></li>
+        <li class="layui-nav-item"><a href="">按疾病预约</a></li>
+        <li class="layui-nav-item "><a href="">公告资讯</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a href="">最新公告</a>
+                </dd>
+                <dd>
+                    <a href="">健康资讯</a>
+                </dd>
+            </dl></li>
+        <li class="layui-nav-item"><a href="">留言解答</a></li>
+        <li class="layui-nav-item"><a href="">个人中心</a></li>
+    </ul>
+
+    <!-- 正文-->
+    <br><br><br>
+    <div th:if="${department!=null}" class="ksorder_box">
+        <div style="float:left;padding: 10px;">
+            <img th:src="${department.imageUrl}" style="width: 150px;height: 150px;">
+        </div>
+
+            <div style="margin-left:180px;padding-right: 300px;">
+                <strong th:text="${department.departmentName}" style="font-size:18px;"></strong><br><br>
+                <p th:text="${department.departmentDesc}"></p>
+            </div>
+    </div><br>
+
+    <div th:if="${disease!=null}" class="ksorder_box">
+        <div style="float:left;padding: 10px;">
+            <img th:src="${disease.imageUrl}" style="width: 150px;height: 150px;">
+        </div>
+        <div style="margin-left:180px;padding-right: 300px;">
+            <strong th:text="${disease.diseaseName}" style="font-size:18px;"></strong><br><br>
+            <p th:text="${disease.diseaseDesc}"></p>
+        </div>
+    </div>
+    <br>
+    <div style="margin: 15px">
+        <h2>医生列表</h2>
+    </div>
+    <div>
+        <div class="g-doctor-item1"  th:each="doctor : ${doctorList}">
+            <div style="display: inline-block"  class="g-doctor-item2">
+              <img th:src="${doctor.imageUrl}" height="60" width="60">
+                <a  th:text="${doctor.name}"></a>
+                <span th:text="${doctor.doctorInfo.professionalTitle}"></span>
+            </div>
+            <div style="display: inline-block" class="g-doctor-item3" >
+                <strong>擅长:</strong>
+                <p th:text="${doctor.doctorInfo.expertDesc}"></p>
+            </div>
+            <div style="display: inline-block" class="g-doctor-item4">
+                <div><span>评分：</span><p  style="display:inline;" th:text="${doctor.doctorInfo.score}"></p></div>
+                <div>问诊量：<p style="display:inline;" th:text="${doctor.doctorInfo.appointmentCount}"></p></div>
+                <div>收藏数：</div>
+            </div>
+            <div style="display: inline-block" >
+                <a th:href="@{/appointment/doctor/{id}(id=${doctor.id})}" >预约</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="footer">
+    <p>清风医院预约门诊统一平台</p>
+    <p>技术支持：XLQ</p>
+</div>
+</body>
+</html>

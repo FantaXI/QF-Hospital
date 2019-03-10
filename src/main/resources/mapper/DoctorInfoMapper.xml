@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.DoctorInfoDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.DoctorInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="doctor_desc" property="doctorDesc" jdbcType="VARCHAR" />
+    <result column="expert_desc" property="expertDesc" jdbcType="VARCHAR" />
+    <result column="professional_title" property="professionalTitle" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DECIMAL" />
+    <result column="appointment_count" property="appointmentCount" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="col1" property="col1" jdbcType="VARCHAR" />
+    <result column="col2" property="col2" jdbcType="VARCHAR" />
+    <result column="col3" property="col3" jdbcType="VARCHAR" />
+    <result column="col4" property="col4" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_doctor_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.DoctorInfo" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_doctor_info (id, user_id, department_id, department_name,
+      doctor_desc, expert_desc, professional_title, 
+      score, appointment_count, create_time, 
+      last_update_time, col1, col2, 
+      col3, col4)
+    values (#{id}, #{userId,jdbcType=VARCHAR}, #{departmentId,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},
+      #{doctorDesc,jdbcType=VARCHAR}, #{expertDesc,jdbcType=VARCHAR}, #{professionalTitle,jdbcType=VARCHAR}, 
+      #{score,jdbcType=DECIMAL}, #{appointmentCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastUpdateTime,jdbcType=TIMESTAMP}, #{col1,jdbcType=VARCHAR}, #{col2,jdbcType=VARCHAR}, 
+      #{col3,jdbcType=VARCHAR}, #{col4,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.DoctorInfo" >
+    update h_doctor_info
+    <set>
+      <if test="userId!=null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId!=null">
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorDesc!=null">
+        doctor_desc = #{doctorDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="expertDesc!=null">
+        expert_desc = #{expertDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="professionalTitle!=null">
+        professional_title = #{professionalTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="score!=null">
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="appointmentCount!=null">
+        appointment_count = #{appointmentCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, user_id, department_id, department_name, doctor_desc, expert_desc, professional_title, 
+    score, appointment_count, create_time, last_update_time, col1, col2, col3, col4
+    from h_doctor_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, user_id, department_id, department_name, doctor_desc, expert_desc, professional_title, 
+    score, appointment_count, create_time, last_update_time, col1, col2, col3, col4
+    from h_doctor_info
+  </select>
+  
+  <select id="getDoctorInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, user_id, department_id, department_name, doctor_desc, expert_desc, professional_title, 
+    score, appointment_count, create_time, last_update_time, col1, col2, col3, col4
+    from h_doctor_info
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+</mapper>

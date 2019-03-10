@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户中心--layui后台管理模板 2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
+</head>
+<body class="childrenBody">
+<form class="layui-form">
+    <blockquote class="layui-elem-quote quoteBox">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input searchVal" style="width: 100%;" placeholder="姓名/手机号码/邮箱/科室" />
+                </div>
+                <a class="layui-btn search_btn" data-type="reload">搜索</a>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal addNews_btn">添加用户</a>
+            </div>
+            <!--div class="layui-inline">
+                <a class="layui-btn layui-btn-danger layui-btn-normal delAll_btn">批量删除</a>
+            </div-->
+        </form>
+    </blockquote>
+    <table id="userList" lay-filter="userList"></table>
+
+    <!--操作-->
+    <script type="text/html" id="userListBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="able">启用</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="disable">禁用</a>
+    </script>
+</form>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<!--  script type="text/javascript" th:src="@{/js/admin_patient_list.js}"></script  -->
+<script type="text/javascript"  th:inline="javascript">
+    var col = [{type: "checkbox", fixed:"left", width:50},
+        {field: 'name', title: '姓名', minWidth:100, align:"center"},
+        {field: 'mobile', title: '手机号码', minWidth:100, align:"center"},
+        {field: 'email', title: '邮箱', minWidth:100, align:'center'},
+        {field: 'departmentName', title: '所属科室', align:'center',sort: true,templet: function(d){return (d.doctorInfo.departmentName==null||'')?'':d.doctorInfo.departmentName;}},
+        {field: '', title: '职称', align:'center',templet: function(d){return d.doctorInfo.professionalTitle}},
+        {field: 'score', title: '评分', align:'center',sort: true,templet: function(d){return d.doctorInfo.score}},
+        {field: 'count', title: '预约数', align:'center',sort: true,templet: function(d){return d.doctorInfo.appointmentCount}},
+        {field: '', title: '用户状态', align:'center',templet: function(d){return d.state == "X" ? "禁用" : "正常";}},
+        {title: '操作', minWidth:175, templet:'#userListBar',fixed:"right",align:"center"}];
+    layui.use(['form','layer','table','laytpl'],function(){
+        var form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : top.layer,
+            $ = layui.jquery,
+            laytpl = layui.laytpl,
+            table = layui.table;
+
+        //用户列表
+        var tableIns = table.render({
+
+            elem: '#userList',
+            url : /*[[@{/admin/getDoctorList}]]*/,
+            cellMinWidth : 95,
+            page : true,
+            height : "full-125",
+            limits : [10,15,20,25],
+            limit : 20,
+            id : "newUserListTable",
+            cols : [col]
+        });
+
+        //搜索
+        $(".search_btn").on("click",function(){
+
+            table.reload("newUserListTable",{
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    key: $(".searchVal").val()  //搜索的关键字
+                }
+            })
+
+        });
+
+        //修改用户
+        function editUser(edit){
+            var index = layui.layer.open({
+                title : "编辑用户",
+                type : 2,
+                content : /*[[@{/admin/doctor/edit}]]*/,
+                success : function(layero, index){
+                    var body = layui.layer.getChildFrame('body', index);
+                    console.log(edit)
+                    if(edit){
+                        body.find(".userName").val(edit.name);
+                        body.find(".userMobile").val(edit.mobile);
+                        body.find(".userEmail").val(edit.email);
+                        body.find(".userPassword").val(edit.password);
+                        body.find(".doctorDesc").val(edit.doctorInfo.doctorDesc);
+                        body.find(".expertDesc").val(edit.doctorInfo.expertDesc);
+                        body.find(".professionalTitle").val(edit.doctorInfo.professionalTitle);
+                        body.find(".userId").val(edit.id);
+                        body.find(".doctorId").val(edit.doctorInfo.id);
+                        body.find(".departmentClassId").val(edit.doctorInfo.departmentClassId);  //科室大类
+                        body.find(".departmentId").val(edit.doctorInfo.departmentId);  //科室大类
+                        body.find("#demo1").attr("src",edit.imageUrl);
+                        form.render();
+                    }
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layui.layer.full(window.sessionStorage.getItem("index"));
+            })
+        }
+
+        function addUser(edit){
+            var index = layui.layer.open({
+                title : "添加用户",
+                type : 2,
+                content : /*[[@{/admin/doctor/add}]]*/,
+                success : function(layero, index){
+                    var body = layui.layer.getChildFrame('body', index);
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layui.layer.full(window.sessionStorage.getItem("index"));
+            })
+        }
+
+        $(".addNews_btn").click(function(){
+            addUser();
+        })
+
+        //批量删除   (暂时放弃)
+        // $(".delAll_btn").click(function(){
+        //     var checkStatus = table.checkStatus('userListTable'),
+        //         data = checkStatus.data,
+        //         newsId = [];
+        //     if(data.length > 0) {
+        //         for (var i in data) {
+        //             newsId.push(data[i].newsId);
+        //         }
+        //         layer.confirm('确定删除选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
+        //             // $.get("删除文章接口",{
+        //             //     newsId : newsId  //将需要删除的newsId作为参数传入
+        //             // },function(data){
+        //             tableIns.reload();
+        //             layer.close(index);
+        //             // })
+        //         })
+        //     }else{
+        //         layer.msg("请选择需要删除的用户");
+        //     }
+        // })
+
+        //列表操作
+        table.on('tool(userList)', function(obj){
+            var layEvent = obj.event,
+                data = obj.data;
+
+            if(layEvent === 'edit'){ //编辑
+                editUser(data);
+            }else if(layEvent === 'able'){ //启用禁用
+                layer.confirm('确定启用此用户？',{icon:3, title:'提示信息'},function(index){
+                    $.get(/*[[@{/admin/user/state}]]*/,{
+                        id : data.id ,  //将Id作为参数传入
+                        state : "A"
+                    },function(data){
+                        if (data.code < 0){
+                            top.layer.msg(data.msg);
+                        }
+                        tableIns.reload();
+                        layer.close(index);
+                    })
+                });
+            }else if(layEvent === 'disable'){ //删除
+                layer.confirm('确定禁用此用户？',{icon:3, title:'提示信息'},function(index){
+                    $.get(/*[[@{/admin/user/state}]]*/,{
+                        id : data.id ,  //将Id作为参数传入
+                        state : "X"
+                    },function(data){
+                        if (data.code < 0){
+                            top.layer.msg(data.msg);
+                        }
+                        tableIns.reload();
+                        layer.close(index);
+                    })
+                });
+            }
+        });
+
+    })
+    //格式化
+    Date.prototype.format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+
+        return fmt;
+    }
+
+    //返回格式化时间
+    function getformat(date,format){
+        var dateformat=''
+        var DateTimeReg = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
+        if(date){
+            if(typeof date === 'string' && DateTimeReg.test(date)) {
+                //IE浏览器的Date.parse方法的实现要求参数是RFC2822或ISO 8601格式
+                //现在系统常用的格式之一：2018-01-01 06:30:30不能正常转换
+                //如下转换后IE下的Date.parse可以正常执行
+                date = date.replace(' ', 'T')
+
+                // 360浏览器的极速模式在解析时间字符串时会将该字符串视为UTC时间
+                // 然后在生成时间对象的时候按照北京时间（GMT+0800）来生成
+                // 所以会导致小时数+8，从而显示异常
+                // 如下处理，手动声明该时间字符串为北京时间，避免时区的转换
+                date = date + '+08:00';
+            }
+
+            dateformat=new Date(date).format(format);
+        }
+        return dateformat;
+    }
+</script>
+</body>
+</html>

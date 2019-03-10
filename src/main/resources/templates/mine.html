@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>个人中心</title>
+<link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
+<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
+<script src="/layui/layui.js"></script>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<script>
+$(document).ready(function (){
+	
+
+});
+
+</script>
+<style>
+body {
+	padding: 0;
+	margin: 0;
+	font-size: 12px;
+	font-family: "微软雅黑"
+}
+
+.layui-nav .layui-nav-item {
+	position: relative;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	vertical-align: middle;
+	line-height: 40px;
+	margin: 0px 40px;
+}
+
+.layui-col-md3 span {
+	display: block;
+	background: #f4f6fa;
+	color: #fec009;
+	padding-left: 30px;
+	line-height: 40px;
+	font-size: 18px;
+}
+
+.layui-col-md9 p {
+	line-height: 30px;
+	color: #999999;
+}
+
+.layui-col-md9 span {
+	display: block;
+	background: #f4f6fa;
+	color: #fec009;
+	padding-left: 30px;
+	line-height: 40px;
+}
+
+.layui-col-md9 section {
+	background: #fff;
+}
+
+.wrap {
+	width: 1130px;
+	margin: 0px auto;
+}
+
+.logo {
+	margin: 10px 0px;
+}
+
+.header {
+	line-height: 30px;
+	background: #eeeeee;
+}
+
+.footer {
+	background-color: #f6f6f6;
+	text-align: center;
+	padding: 20px 0px;
+}
+.span1{
+    float: left;
+    line-height: 30px;
+    height: 30px; 
+	color: #888;
+}
+.li1{
+    margin: 15px 0;
+    vertical-align: 4px;
+    zoom: 1;
+    }
+ label {
+    font-size: 14px;
+}
+</style>
+<body>
+	<div class="header">
+		<div class='wrap'>
+			<p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
+			<div style="float: right">
+				<a href="">登录 </a>&nbsp;|&nbsp;&nbsp;<a href="">注册</a>
+			</div>
+			<div style='clear: both;'></div>
+		</div>
+	</div>
+
+
+
+	<div class="layui-container">
+		<div class="logo">
+			<img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+		</div>
+
+		<ul class="layui-nav layui-bg-green" lay-filter="">
+			<li></li>
+			<li class="layui-nav-item"><a href="main">首页</a></li>
+			<li class="layui-nav-item"><a href="">按科室预约</a></li>
+			<li class="layui-nav-item"><a href="">按疾病预约</a></li>
+			<li class="layui-nav-item"><a href="">公告资讯</a>
+				<dl class="layui-nav-child">
+					<!-- 二级菜单 -->
+					<dd>
+						<a href="">最新公告</a>
+					</dd>
+					<dd>
+						<a href="">健康资讯</a>
+					</dd>				
+				</dl></li>
+			<li class="layui-nav-item"><a href="">留言解答</a></li>
+			<li class="layui-nav-item  layui-this"><a href="">个人中心</a></li>
+		</ul>
+		
+
+</br></br>
+
+<div class="layui-row layui-col-space10">
+		
+			<div class="layui-col-md2">	
+			
+			
+<ul class="nav nav-pills nav-stacked">
+  <li role="presentation" class="active"><a href="#">个人信息</a></li>
+  <li role="presentation"><a href="#">预约管理</a></li>
+  <li role="presentation"><a href="#">我的收藏</a></li>
+  <li role="presentation"><a href="#">我的留言</a></li>
+</ul>
+</div>
+<div class="layui-col-md8">
+<span>个人中心----------------------------------------------------</span>
+	<form action="/user/upload" enctype="multipart/form-data" method="post">
+		<img th:src="@{{filename}(filename=${currentUser.imageUrl})}" height="200" width="200" ></img>
+        <input type="file" name="pic"><br>
+		<input type="submit" value="提交">
+	</form>
+<li class="li1"><span class="span1">姓名：</span><input disabled th:value="${currentUser.name}"></input></li>
+<li class="li1"><span class="span1">手机号码：</span><input disabled th:value="${currentUser.mobile}"></input></li>
+<li class="li1"><span class="span1">邮箱：</span><input disabled th:value="${currentUser.email}"></input></li>
+<li class="li1"><span class="span1">身份证号：</span><input disabled th:value="${currentUser.patientInfo.idCard}"></input></li>
+<li class="li1"><span class="span1">居住地：</span><input disabled th:value="${currentUser.patientInfo.address}"></input></li>
+<li class="li1"><span class="span1">出生年月：</span><input disabled th:value="${#dates.format(currentUser.patientInfo.bornData, 'yyyy-MM-dd')}"></input></li>
+<li class="li1"><span class="span1">性别：</span><input disabled th:value="${currentUser.patientInfo.sex}"></input></li>
+</div>
+
+</div>
+
+	
+
+</div>
+
+	<div class="footer">
+		<p>清风医院预约门诊统一平台</p>
+		<p>技术支持：XLQ</p>
+	</div>
+	<script>
+	layui.use('element', function(){
+		  var element = layui.element;
+	});
+	</script>
+</body>
+</html>

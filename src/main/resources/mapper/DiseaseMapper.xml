@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.DiseaseDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Disease" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="disease_name" property="diseaseName" jdbcType="VARCHAR" />
+    <result column="disease_desc" property="diseaseDesc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="type_class_id" property="typeClassId" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_disease
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.Disease" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_disease (id, disease_name, disease_desc, image_url, class_id,department_id)
+    values (#{id}, #{diseaseName,jdbcType=VARCHAR}, #{diseaseDesc,jdbcType=VARCHAR},
+      #{imageUrl,jdbcType=VARCHAR}, #{classId,jdbcType=VARCHAR},#{departmentId} )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Disease" >
+    update h_disease
+    <set>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=VARCHAR},
+      </if>
+      <if test="diseaseName != null">
+        disease_name = #{diseaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="diseaseDesc != null">
+        disease_desc = #{diseaseDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, disease_name, disease_desc, create_time, last_update_time, image_url, 
+    class_id, department_id
+    from h_disease
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, disease_name, disease_desc, create_time, last_update_time, image_url, 
+    class_id, department_id
+    from h_disease
+  </select>
+  <select id="queryDiseaseByClassId" parameterType="string" resultMap="BaseResultMap" >
+    select id, disease_name, disease_desc, create_time, last_update_time, image_url,
+    class_id, department_id
+    from h_disease
+    WHERE class_id = #{classId}
+  </select>
+  <select id="queryDiseaseByKey" resultMap="BaseResultMap" parameterType="string">
+    select hd.id, hd.class_id, disease_name, disease_desc,
+    hd.image_url,tc.id type_class_id,department_id,tc.class_name,hde.department_name
+    from (h_disease hd, h_department hde)
+    LEFT JOIN (h_type_class tc)
+    on hd.class_id = tc.id
+    <where>
+      hd.department_id = hde.id
+      <if test="key!=null">
+        and (hd.disease_name like CONCAT('%',#{key},'%') or tc.class_name like CONCAT('%',#{key},'%') or
+        hde.department_name like CONCAT('%',#{key},'%'))
+      </if>
+    </where>
+  </select>
+</mapper>

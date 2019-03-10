@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>首页</title>
+<link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
+<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
+<script src="/layui/layui.js"></script>
+<script>
+
+//格式化
+Date.prototype.format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+
+    return fmt;
+}
+
+//返回格式化时间
+function getformat(date,format){
+    var dateformat=''
+    var DateTimeReg = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
+    if(date){
+        if(typeof date === 'string' && DateTimeReg.test(date)) {
+            //IE浏览器的Date.parse方法的实现要求参数是RFC2822或ISO 8601格式
+            //现在系统常用的格式之一：2018-01-01 06:30:30不能正常转换
+            //如下转换后IE下的Date.parse可以正常执行
+            date = date.replace(' ', 'T')
+
+            // 360浏览器的极速模式在解析时间字符串时会将该字符串视为UTC时间
+            // 然后在生成时间对象的时候按照北京时间（GMT+0800）来生成
+            // 所以会导致小时数+8，从而显示异常
+            // 如下处理，手动声明该时间字符串为北京时间，避免时区的转换
+            date = date + '+08:00';
+        }
+
+        dateformat=new Date(date).format(format);
+    }
+    return dateformat;
+}
+
+
+$(document).ready(function (){
+	var pageNum = 1;
+	var pageSize = 8;
+    $.ajax({	
+        url : "/home/notice",
+        type : "post",
+        data : {'pageNum':pageNum,'pageSize':pageSize,'type':'1'},
+        success : function (data){
+        	console.log(data)
+            var obj = eval(data.objectResult);
+            var tbody = $('<tbody></tbody>');           
+            $(obj).each(function (index){           	
+                var val = obj[index];
+                var time = getformat(val.createTime,"yyyy-MM-dd");
+                var tr = $('<tr></tr>');
+                tr.append('<td><a href="/home/noticeInfo?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;">' + time + '</td>' );
+                tbody.append(tr);
+            });
+            $('#notice tbody').replaceWith(tbody);
+        },
+    	error : function(){
+    		alert("错误");
+    	}
+    });
+    $.ajax({	
+        url : "/home/notice",
+        type : "post",
+        data : {'pageNum':pageNum,'pageSize':pageSize,'type':'2'},
+        success : function (data){
+        	console.log(JSON.stringify(data))
+        	
+            var obj = eval(data.objectResult);
+            var tbody = $('<tbody></tbody>');           
+            $(obj).each(function (index){           	
+                var val = obj[index];
+                var time = getformat(val.createTime,"yyyy-MM-dd");
+                var tr = $('<tr></tr>');
+                tr.append('<td><a href="/home/noticeInfo?id=' + val.id + '">'+(index+1)+'、' + val.noticeTitle + '</a></td>' + '<td  style="text-align:right;">' + time + '</td>' );
+                tbody.append(tr);
+            });
+            $('#news tbody').replaceWith(tbody);
+        },
+    	error : function(){
+    		alert("错误");
+    	}
+    });
+});
+</script>
+</head>
+<style>
+body {
+	padding: 0;
+	margin: 0;
+	font-size: 12px;
+	font-family: "微软雅黑"
+}
+
+.layui-nav .layui-nav-item {
+	position: relative;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	vertical-align: middle;
+	line-height: 40px;
+	margin: 0px 40px;
+}
+
+.layui-col-md3 span {
+	display: block;
+	background: #f4f6fa;
+	color: #fec009;
+	padding-left: 30px;
+	line-height: 40px;
+	font-size: 18px;
+}
+
+.layui-col-md9 p {
+	line-height: 30px;
+	color: #999999;
+}
+
+.layui-col-md9 span {
+	display: block;
+	background: #f4f6fa;
+	color: #fec009;
+	padding-left: 30px;
+	line-height: 40px;
+}
+
+.layui-col-md9 section {
+	background: #fff;
+}
+
+.wrap {
+	width: 1130px;
+	margin: 0px auto;
+}
+
+.logo {
+	margin: 10px 0px;
+}
+
+.header {
+	line-height: 30px;
+	background: #eeeeee;
+}
+
+.footer {
+	background-color: #f6f6f6;
+	text-align: center;
+	padding: 20px 0px;
+}
+
+.notice {}
+.news{}
+</style>
+
+<body>
+	<div class="header">
+		<div class='wrap'>
+			<p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
+			<div style="float: right;">
+			<a style="color: #01AAED"  th:if="${session.user == null}"  href="/login">登录</i> </a>
+			<a style="color: #01AAED" th:if="${session.user != null}" th:text="${session.user.name}+',已登录'">已登录</a>
+			&nbsp;|&nbsp;&nbsp;
+			<a style="color: #01AAED"  th:if="${session.user == null}"  href="register">注册</i> </a>
+			<a style="color: #01AAED" th:if="${session.user != null}" th:href="@{/logout}">注销</a>
+			</div>
+			<div style='clear: both;'></div>
+		</div>
+	</div>
+
+
+
+	<div class="layui-container">
+		<div class="logo">
+			<img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+		</div>
+
+		<ul class="layui-nav layui-bg-green" lay-filter="">
+			<li></li>
+			<li class="layui-nav-item  layui-this"><a href="">首页</a></li>
+			<li class="layui-nav-item"><a href="">按科室预约</a></li>
+			<li class="layui-nav-item"><a href="">按疾病预约</a></li>
+			<li class="layui-nav-item"><a href="">公告资讯</a>
+				<dl class="layui-nav-child">
+					<!-- 二级菜单 -->
+					<dd>
+						<a href="noticeList">最新公告</a>
+					</dd>
+					<dd>
+						<a href="newsList">健康资讯</a>
+					</dd>				
+				</dl></li>
+			<li class="layui-nav-item"><a href="">留言解答</a></li>	
+			<li class="layui-nav-item"><a href="">个人中心</a></li>
+
+		</ul>
+
+
+
+
+		<div class="layui-row layui-col-space10">
+		
+			<div class="layui-col-md3">	
+				
+			<span>快速预约</span>
+				<form class="layui-form">
+					<div class="layui-form-item ">
+						<div class="layui-input-block">
+						    <input type="text" class="layui-input" id="appointmentDate" >
+							</br>				
+							<select id ="department" name="department" lay-verify="" lay-search>
+								<option value="" selected>请选择科室</option>
+							</select>						
+							</br>
+							
+							<select id="doctor" name="doctor" lay-verify="" lay-search>
+								<option value="">请选择医生</option>						
+							</select>
+							
+							</br>
+							<button class="layui-btn layui-btn-warm">前往预约</button>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+			<div class="layui-col-md6">
+				<div class="layui-carousel" id="test1">
+					<div carousel-item>
+						<div>条目1</div>
+						<div>条目2</div>
+						<div>条目3</div>
+						<div>条目4</div>
+						<div>条目5</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<section>
+					<span>医院简介</span>
+				</section>
+			</div>
+		</div>
+
+		<div class="layui-row layui-col-space10">
+			<div class="layui-col-md9">
+				<section style="background: #fff; font-size: 16px;">			
+				<span style="font-size: 18px;">公告栏</span>		
+				<table id="notice" class="notice" width="852px">
+						<tr>						
+						</tr>	
+				</table>								
+				</section>
+				
+			</div>
+
+			<div class="layui-col-md3">
+				<section style="background: red">
+					<span style="font-size: 18px;">联系方式、地址</span>
+				</section>
+			</div>
+		</div>
+		<div class="layui-row layui-col-space10">
+			<div class="layui-col-md9">
+				<section style="background: #fff; font-size: 16px;">
+					<span style="font-size: 18px;">健康资讯</span>
+					<table id="news" class="news" width="852px">
+						<tr>						
+						</tr>	
+				</table>
+				</section>
+			</div>
+
+			<div class="layui-col-md3">
+				<section style="background: red">
+					<span style="font-size: 18px;">著名医生</span>
+				</section>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="footer">
+		<p>清风医院预约门诊统一平台</p>
+		<p>技术支持：XLQ</p>
+	</div>
+
+
+	<script>
+		//注意：导航 依赖 element 模块，否则无法进行功能性操作
+		layui.use('element', function() {
+			var element = layui.element;
+		});
+	</script>
+	<script>
+		layui.use('carousel', function() {
+			var carousel = layui.carousel;
+			//建造实例
+			carousel.render({
+				elem : '#test1',
+				width : '100%' //设置容器宽度
+				,
+				arrow : 'always' //始终显示箭头
+			//,anim: 'updown' //切换动画方式
+			});
+		});
+		<!--加载form模块-->
+		layui.use('form', function() {
+	          var form = layui.form; 
+	          form.render();
+	     });
+		<!--时间选择 -->
+		layui.use('laydate', function(){
+			  var laydate = layui.laydate;			  
+			  //执行一个laydate实例
+			  laydate.render({
+			    elem: '#appointmentDate' //指定元素
+			    ,format: 'yyyy年MM月dd日'
+			    ,min: -0 //7天前
+			    ,max: 7 //7天后
+			  });
+			});
+	</script>
+</body>
+</html>

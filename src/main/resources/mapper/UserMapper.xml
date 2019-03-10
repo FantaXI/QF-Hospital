@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.UserDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.User" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="login_type" property="loginType" jdbcType="VARCHAR" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="DoctorResultMap" type="com.xlq.hospital.model.User" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="login_type" property="loginType" jdbcType="VARCHAR" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+      <association property="doctorInfo" javaType="com.xlq.hospital.model.DoctorInfo">
+        <id column="did" property="id" jdbcType="VARCHAR" />
+        <result column="duser_id" property="userId" jdbcType="VARCHAR" />
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+        <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+        <result column="doctor_desc" property="doctorDesc" jdbcType="VARCHAR" />
+        <result column="expert_desc" property="expertDesc" jdbcType="VARCHAR" />
+        <result column="professional_title" property="professionalTitle" jdbcType="VARCHAR" />
+        <result column="score" property="score" jdbcType="DECIMAL" />
+        <result column="appointment_count" property="appointmentCount" jdbcType="INTEGER" />
+        <result column="dcreate_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="dlast_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+        <result column="department_class_id" property="departmentClassId" jdbcType="VARCHAR" />
+        <result column="col1" property="col1" jdbcType="VARCHAR" />
+        <result column="col2" property="col2" jdbcType="VARCHAR" />
+        <result column="col3" property="col3" jdbcType="VARCHAR" />
+        <result column="col4" property="col4" jdbcType="VARCHAR" />
+      </association>
+  </resultMap>
+
+  <resultMap id="PatientResultMap" type="com.xlq.hospital.model.User" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="login_type" property="loginType" jdbcType="VARCHAR" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <association property="patientInfo" javaType="com.xlq.hospital.model.PatientInfo">
+      <id column="pid" property="id" jdbcType="VARCHAR" />
+      <result column="puser_id" property="userId" jdbcType="VARCHAR" />
+      <result column="address" property="address" jdbcType="VARCHAR" />
+      <result column="sex" property="sex" jdbcType="VARCHAR" />
+      <result column="born_data" property="bornData" jdbcType="VARCHAR" />
+      <result column="age" property="age" jdbcType="VARCHAR" />
+      <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+      <result column="pcreate_time" property="createTime" jdbcType="TIMESTAMP" />
+      <result column="plast_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+      <result column="col1" property="col1" jdbcType="VARCHAR" />
+      <result column="col2" property="col2" jdbcType="VARCHAR" />
+      <result column="col3" property="col3" jdbcType="VARCHAR" />
+      <result column="col4" property="col4" jdbcType="VARCHAR" />
+      <result column="col5" property="col5" jdbcType="VARCHAR" />
+      <result column="col6" property="col6" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.User" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_user (id, mobile, password, login_type,
+      image_url, email, role_id, 
+      role_type, state, name)
+    values (#{id,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{loginType,jdbcType=VARCHAR},
+      #{imageUrl,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, 
+      #{roleType,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.User" >
+    update h_user
+    <set>
+      <if test="mobile!=null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password!=null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="loginType!=null">
+        login_type = #{loginType,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl!=null">
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="email!=null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId!=null">
+        role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType!=null">
+        role_type = #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="name!=null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state!=null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, mobile, password, login_type, image_url, email, role_id, role_type, 
+    create_time, last_update_time, state, name
+    from h_user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, mobile, password, login_type, image_url, email, role_id, role_type, 
+    create_time, last_update_time, state, name
+    from h_user
+  </select>
+  
+  <select id="getUserByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, mobile, password, login_type, image_url, email, role_id, role_type, 
+    create_time, last_update_time, state, name
+    from h_user
+    where mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+  <select id="queryDoctorByDepartmentId" resultMap="DoctorResultMap" parameterType="java.lang.String" >
+    select u.id, mobile, password, login_type, image_url, email, role_id, role_type,
+    u.create_time, u.last_update_time, u.state, name,
+    d.id did, d.user_id duser_id, d.department_id, d.department_name, d.doctor_desc, d.expert_desc, d.professional_title,
+    d.score, d.appointment_count, d.create_time dcreate_time, d.last_update_time dlast_update_time, d.col1, d.col2, d.col3, d.col4
+    from h_user u, h_doctor_info d
+    where u.id = d.user_id and d.department_id = #{departmentId,jdbcType=VARCHAR}
+  </select>
+  <select id="queryDoctorByDiseaseId" resultMap="DoctorResultMap" parameterType="java.lang.String" >
+    select u.id, mobile, password, login_type, image_url, email, role_id, role_type,
+    u.create_time, u.last_update_time, u.state, name,
+    d.id did, d.user_id duser_id, d.department_id, d.department_name, d.doctor_desc, d.expert_desc, d.professional_title,
+    d.score, d.appointment_count, d.create_time dcreate_time, d.last_update_time dlast_update_time, d.col1, d.col2, d.col3, d.col4
+    from h_user u, h_doctor_info d,h_doctor_disease hdd
+    where u.id = d.user_id and u.id in (select doctor_id from h_doctor_disease where disease_id = #{diseaseId} )
+  </select>
+
+  <select id="queryPatientList" resultMap="PatientResultMap" parameterType="java.lang.String">
+    select u.id, mobile, password, login_type, image_url, email, role_id, role_type,
+    u.create_time, u.last_update_time, u.state, name,
+    pi.id pid, pi.user_id puser_id, pi.address, pi.born_data, pi.age, pi.id_card, pi.create_time pcreate_time, pi.last_update_time plast_update_time, pi.sex,
+    pi.col1, pi.col2, pi.col3, pi.col4, pi.col5, pi.col6
+    from h_user u , h_patient_info pi
+    where u.role_type = "1" and u.id = pi.user_id
+    <if test="key!=null">
+      and (u.name like CONCAT('%',#{key},'%') or u.mobile like CONCAT('%',#{key},'%') or u.email like CONCAT('%',#{key},'%') or pi.address like CONCAT('%',#{key},'%'))
+    </if>
+  </select>
+  <select id="queryDoctorList" resultMap="DoctorResultMap" parameterType="java.lang.String" >
+    select u.id, mobile, password, login_type, u.image_url, email, role_id, role_type,
+    u.create_time, u.last_update_time, u.state, name,
+    d.id did, d.user_id duser_id, d.department_id, hd.department_name, d.doctor_desc, d.expert_desc, d.professional_title,
+    d.score, d.appointment_count, d.create_time dcreate_time, d.last_update_time dlast_update_time, d.col1, d.col2, d.col3, d.col4,hd.class_id department_class_id
+    from (h_user u, h_doctor_info d)
+    left join (h_department hd)
+    on d.department_id = hd.id
+    where u.role_type = "2" and u.id = d.user_id
+    <if test="key!=null">
+      and (u.name like CONCAT('%',#{key},'%') or u.mobile like CONCAT('%',#{key},'%') or u.email like CONCAT('%',#{key},'%')
+      or hd.department_name like CONCAT('%',#{key},'%') or d.professional_title like CONCAT('%',#{key},'%'))
+    </if>
+  </select>
+
+  <select id="getUserByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, mobile, password, login_type, image_url, email, role_id, role_type,
+    create_time, last_update_time, state, name
+    from h_user
+    where email = #{email,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryDoctorByDepartmentIdAndScheduleDate" resultMap="DoctorResultMap" parameterType="java.util.Map" >
+    select u.id, mobile, password, login_type, u.image_url, email, role_id, role_type,
+    u.create_time, u.last_update_time, u.state, name,
+    d.id did, d.user_id duser_id, d.department_id, hde.department_name, d.doctor_desc, d.expert_desc, d.professional_title,
+    d.score, d.appointment_count, d.create_time dcreate_time, d.last_update_time dlast_update_time, d.col1, d.col2, d.col3, d.col4
+    from h_user u, h_doctor_info d, h_department hde
+    where u.id = d.user_id  and d.department_id = hde.id
+		and u.id not in (SELECT hs.doctor_id from h_schedule hs WHERE schedule_date = #{scheduleDate})
+		<if test="departmentId!=null">
+          and d.department_id = #{departmentId,jdbcType=VARCHAR}
+        </if>
+  </select>
+
+</mapper>

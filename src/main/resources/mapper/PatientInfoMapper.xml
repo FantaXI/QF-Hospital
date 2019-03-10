@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.PatientInfoDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.PatientInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="born_data" property="bornData" jdbcType="DATE" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="col1" property="col1" jdbcType="VARCHAR" />
+    <result column="col2" property="col2" jdbcType="VARCHAR" />
+    <result column="col3" property="col3" jdbcType="VARCHAR" />
+    <result column="col4" property="col4" jdbcType="VARCHAR" />
+    <result column="col5" property="col5" jdbcType="VARCHAR" />
+    <result column="col6" property="col6" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_patient_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.PatientInfo" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_patient_info (id, user_id, address, born_data,
+      age, id_card, sex)
+    values (#{id}, #{userId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{bornData,jdbcType=DATE},
+      #{age,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.PatientInfo" >
+    update h_patient_info
+    <set>
+      <if test="userId!=null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="address!=null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="bornData!=null">
+        born_data = #{bornData,jdbcType=DATE},
+      </if>
+      <if test="age!=null">
+        age = #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard!=null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex!=null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, user_id, address, born_data, age, id_card, create_time, last_update_time, 
+    sex, col1, col2, col3, col4, col5, col6
+    from h_patient_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, user_id, address, born_data, age, id_card, create_time, last_update_time, 
+    sex, col1, col2, col3, col4, col5, col6
+    from h_patient_info
+  </select>
+  
+  <select id="getPatientInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, user_id, address, born_data, age, id_card, create_time, last_update_time, 
+    sex, col1, col2, col3, col4, col5, col6
+    from h_patient_info
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getPatientInfoByIdCard" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, user_id, address, born_data, age, id_card, create_time, last_update_time,
+    sex, col1, col2, col3, col4, col5, col6
+    from h_patient_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </select>
+</mapper>

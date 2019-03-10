@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.ScheduleDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Schedule" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="doctor_id" property="doctorId" jdbcType="VARCHAR" />
+    <result column="schedule_date" property="scheduleDate" jdbcType="DATE" />
+    <result column="morning_count" property="morningCount" jdbcType="INTEGER" />
+    <result column="morning_total" property="morningTotal" jdbcType="INTEGER" />
+    <result column="afternoon_count" property="afternoonCount" jdbcType="INTEGER" />
+    <result column="afternoon_total" property="afternoonTotal" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="charge" property="charge" jdbcType="DECIMAL" />
+    <result column="name" property="doctorName" jdbcType="TIMESTAMP" />
+    <result column="department_name" property="departmentName" jdbcType="DECIMAL" />
+    <result column="mobile" property="mobile" jdbcType="DECIMAL" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_schedule
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.Schedule" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_schedule (id, doctor_id, schedule_date, morning_count,
+      morning_total, afternoon_count, afternoon_total, 
+      total, count, charge)
+    values (#{id}, #{doctorId,jdbcType=VARCHAR}, #{scheduleDate,jdbcType=DATE}, #{morningCount,jdbcType=INTEGER},
+      #{morningTotal,jdbcType=INTEGER}, #{afternoonCount,jdbcType=INTEGER}, #{afternoonTotal,jdbcType=INTEGER}, 
+      #{total,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{charge,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Schedule" >
+    update h_schedule
+    <set>
+      <if test="doctorId!=null and doctorId!=''">
+        doctor_id = #{doctorId,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleDate!=null and scheduleDate!=''">
+        schedule_date = #{scheduleDate,jdbcType=DATE},
+      </if>
+      <if test="morningCount!=null and morningCount!=''">
+        morning_count = #{morningCount,jdbcType=INTEGER},
+      </if>
+      <if test="morningTotal!=null and morningTotal!=''">
+        morning_total = #{morningTotal,jdbcType=INTEGER},
+      </if>
+      <if test="afternoonCount!=null and afternoonCount!=''">
+        afternoon_count = #{afternoonCount,jdbcType=INTEGER},
+      </if>
+      <if test="afternoonTotal!=null and afternoonTotal!=''">
+        afternoon_total = #{afternoonTotal,jdbcType=INTEGER},
+      </if>
+      <if test="total!=null and total!=''">
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="count!=null and count!=''">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="charge!=null and charge!=''">
+        charge = #{charge,jdbcType=DECIMAL}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, doctor_id, schedule_date, morning_count, morning_total, afternoon_count, 
+    afternoon_total, total, count, create_time, last_update_time, charge
+    from h_schedule
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, doctor_id, schedule_date, morning_count, morning_total, afternoon_count, 
+    afternoon_total, total, count, create_time, last_update_time, charge
+    from h_schedule
+  </select>
+
+  <select id="queryScheduleByKeyAndScheduleDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select hs.id, hs.doctor_id, schedule_date, morning_count, morning_total, afternoon_count,
+    afternoon_total, total, count, hs.create_time, hs.last_update_time, charge, hu.name, hu.mobile,
+    hd.department_name
+    from h_schedule hs,h_department hd, h_user hu, h_doctor_info hdi
+    where hs.doctor_id = hu.id and hdi.user_id = hu.id and hdi.department_id = hd.id
+    <if test="key!=null and key!=''">
+      and (hd.department_name like CONCAT('%',#{key},'%') or
+      hu.name like CONCAT('%',#{key},'%') or hu.mobile like CONCAT('%',#{key},'%'))
+    </if>
+    <if test="scheduleDateBegin!=null and scheduleDateBegin!=''">
+      and (hs.schedule_date >= #{scheduleDateBegin})
+    </if>
+    <if test="scheduleDateEnd!=null and scheduleDateEnd!=''">
+      and (#{scheduleDateEnd} >= hs.schedule_date)
+    </if>
+  </select>
+
+  <select id="querySchedule" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.Schedule" >
+    select id, doctor_id, schedule_date, morning_count, morning_total, afternoon_count,
+    afternoon_total, total, count, create_time, last_update_time, charge
+    from h_schedule
+    <where>
+      schedule_date = #{scheduleDate,jdbcType=DATE}
+      <if test="id!=null and id!=''">
+        and id = #{id}
+      </if>
+      <if test="doctorId!=null and doctorId!=''">
+        and doctor_id = #{doctorId}
+      </if>
+
+
+    </where>
+  </select>
+  <select id="queryScheduleById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select hs.id, hs.doctor_id, schedule_date, morning_count, morning_total, afternoon_count,
+    afternoon_total, total, count, hs.create_time, hs.last_update_time, charge, hu.name, hu.mobile,
+    hd.department_name
+    from h_schedule hs,h_department hd, h_user hu, h_doctor_info hdi
+    where hs.doctor_id = hu.id and hdi.user_id = hu.id and hdi.department_id = hd.id
+    and hs.id = #{id}
+  </select>
+
+</mapper>
