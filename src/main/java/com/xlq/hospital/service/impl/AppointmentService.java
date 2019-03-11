@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -183,10 +184,30 @@ public class AppointmentService {
 		return scheduleDao.queryScheduleById(id);
 	}
 	/**
+	 * 根据关键字doctorId和日期查询排期
+	 */
+	public ResultObject queryScheduleByDoctorIdAndScheduleDate(int page, int limit, String doctrorId, String scheduleDateBegin,
+	                                                      String scheduleDateEnd){
+		ResultObject resultObject = new ResultObject();
+		Page objectPage = PageHelper.startPage(page,limit);
+		List<Schedule> list = scheduleDao.queryScheduleByDoctorIdAndScheduleDate(doctrorId,scheduleDateBegin,scheduleDateEnd);
+		// 取分页信息
+		PageInfo pageInfo = new PageInfo(objectPage);
+		int total = (int)pageInfo.getTotal(); //获取总记录数
+		resultObject.setCount(total);
+		resultObject.setData(list);
+		return resultObject;
+	}
+
+	/**
 	 * 新增订单
 	 */
 	public int addOrder(Order order){
 		return orderDao.insert(order);
 	}
 
+	public List<Date> queryScheduleDateByDoctorIdAndPeriod(String doctorId,
+	                                                       String scheduleDateBegin, String scheduleDateEnd){
+		return scheduleDao.queryScheduleDateByDoctorIdAndPeriod(doctorId,scheduleDateBegin,scheduleDateEnd);
+	}
 }

@@ -3,6 +3,7 @@ package com.xlq.hospital.dao;
 import com.xlq.hospital.model.Schedule;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ScheduleDao {
@@ -29,4 +30,8 @@ public interface ScheduleDao {
      * @return
      */
     Schedule queryScheduleById(String id);
+
+    List<Date> queryScheduleDateByDoctorIdAndPeriod(@Param(value = "doctorId") String doctorId, @Param(value = "scheduleDateBegin")String scheduleDateBegin, @Param(value = "scheduleDateEnd")String scheduleDateEnd);
+
+    List<Schedule> queryScheduleByDoctorIdAndScheduleDate(@Param(value = "doctorId") String doctorId, @Param(value = "scheduleDateBegin")String scheduleDateBegin, @Param(value = "scheduleDateEnd")String scheduleDateEnd);
 }

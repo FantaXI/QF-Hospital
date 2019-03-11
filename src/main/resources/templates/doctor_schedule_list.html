@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户中心--layui后台管理模板 2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
+</head>
+<body class="childrenBody">
+<form class="layui-form">
+    <blockquote class="layui-elem-quote quoteBox">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <div class="layui-input-inline" >
+                    <input type="text" id="scheduleDateBegin" class="" style="height: 38px; " placeholder="起始日期" />
+                    <input type="text" id="scheduleDateEnd" class=" " style="height: 38px;" placeholder="结束日期" />
+                </div>
+                <a class="layui-btn search_btn" data-type="reload">搜索</a>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal addNews_btn">添加排班设置</a>
+            </div>
+            <!--div class="layui-inline">
+                <a class="layui-btn layui-btn-danger layui-btn-normal delAll_btn">批量删除</a>
+            </div-->
+        </form>
+    </blockquote>
+    <table id="scheduleList" lay-filter="scheduleList"></table>
+
+    <!--操作-->
+    <script type="text/html" id="userListBar">
+        <a class="layui-btn layui-btn-xs" lay-event="">查看</a>
+        <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="del">删除</a>
+    </script>
+</form>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<!--  script type="text/javascript" th:src="@{/js/admin_patient_list.js}"></script  -->
+<script type="text/javascript"  th:inline="javascript">
+    //格式化
+    Date.prototype.format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+
+        return fmt;
+    }
+
+    //返回格式化时间
+    function getformat(date,format){
+        var dateformat=''
+        var DateTimeReg = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
+        if(date){
+            if(typeof date === 'string' && DateTimeReg.test(date)) {
+                //IE浏览器的Date.parse方法的实现要求参数是RFC2822或ISO 8601格式
+                //现在系统常用的格式之一：2018-01-01 06:30:30不能正常转换
+                //如下转换后IE下的Date.parse可以正常执行
+                date = date.replace(' ', 'T')
+
+                // 360浏览器的极速模式在解析时间字符串时会将该字符串视为UTC时间
+                // 然后在生成时间对象的时候按照北京时间（GMT+0800）来生成
+                // 所以会导致小时数+8，从而显示异常
+                // 如下处理，手动声明该时间字符串为北京时间，避免时区的转换
+                date = date + '+08:00';
+            }
+
+            dateformat=new Date(date).format(format);
+        }
+        return dateformat;
+    }
+
+
+    var col = [
+        {field: 'scheduleDate', title: '日期', minWidth:100, align:"center",templet:function(d){return getformat(d.scheduleDate,"yyyy-MM-dd")}},
+        {field: 'count', title: '已预约数', minWidth:100, align:'center'},
+        {field: 'total', title: '当天总数', minWidth:100, align:'center'},
+        {field: 'charge', title: '预约费用', minWidth:100, align:'center',templet:function(d){return d.charge+"元"}},
+        {field: 'createTime', title: '创建时间', minWidth:100, align:'center',templet:function(d){return getformat(d.createTime,"yyyy/MM/dd hh:mm:ss")}},
+        {field: 'lastUpdateTime', title: '最后更改时间', minWidth:100, align:'center',templet:function(d){return getformat(d.lastUpdateTime,"yyyy/MM/dd hh:mm:ss")}},
+        {title: '操作', minWidth:175, templet:'#userListBar',fixed:"right",align:"center"}];
+    layui.use(['form','layer','table','laytpl','laydate'],function() {
+        var form = layui.form,
+            laydate = layui.laydate,
+            layer = parent.layer === undefined ? layui.layer : top.layer,
+            $ = layui.jquery,
+            laytpl = layui.laytpl,
+            table = layui.table;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#scheduleDateBegin' //指定元素
+        });
+        laydate.render({
+            elem: '#scheduleDateEnd' //指定元素
+        });
+        //列表
+        var tableIns = table.render({
+            elem: '#scheduleList',
+            url: /*[[@{/doctor/getScheduleList}]]*/,
+            cellMinWidth: 95,
+            page: true,
+            height: "full-125",
+            limits: [10, 15, 20, 25],
+            limit: 20,
+            id: "newScheduleListTable",
+            cols: [col]
+        });
+
+        //搜索
+        $(".search_btn").on("click", function () {
+
+            table.reload("newScheduleListTable", {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    scheduleDateBegin: $("#scheduleDateBegin").val(),
+                    scheduleDateEnd: $("#scheduleDateEnd").val(),
+                }
+            })
+
+        });
+        function addSchedule(){
+            var index = layui.layer.open({
+                title : "添加",
+                type : 2,
+                content : /*[[@{/doctor/schedule/add}]]*/,
+                success : function(layero, index){
+                    var body = layui.layer.getChildFrame('body', index);
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layui.layer.full(window.sessionStorage.getItem("index"));
+            })
+        }
+
+        $(".addNews_btn").click(function(){
+            addSchedule();
+        })
+        //修改
+        function editSchedule(edit){
+            var index = layui.layer.open({
+                title : "编辑",
+                type : 2,
+                content : /*[[@{/admin/schedule/edit}]]*/,
+                success : function(layero, index){
+                    var body = layui.layer.getChildFrame('body', index);
+                    if(edit){
+                        body.find(".scheduleDate").val(getformat(edit.scheduleDate,"yyyy-MM-dd"));
+                        body.find(".scheduleId").val(edit.id);
+                        body.find(".departmentName").val(edit.departmentName);
+                        body.find(".mobile").val(edit.mobile)
+                        body.find(".doctorName").val(edit.doctorName);
+                        body.find(".count").val(edit.count);
+                        body.find(".total").val(edit.total);
+                        body.find(".charge").val(edit.charge);
+                        form.render();
+                    }
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layui.layer.full(window.sessionStorage.getItem("index"));
+            })
+        }
+        //列表操作
+        table.on('tool(scheduleList)', function(obj){
+            var layEvent = obj.event,
+                data = obj.data;
+
+            if(layEvent === 'edit'){ //编辑
+                editSchedule(data);
+            }else if(layEvent === 'del'){ //删除科室
+                layer.confirm('您没有删除排班的权限，请联系管理员',{icon:3, title:'提示信息'},function(index){
+                        tableIns.reload();
+                        layer.close(index);
+
+                });
+            }
+        });
+
+
+
+    })
+</script>
+</body>
+</html>

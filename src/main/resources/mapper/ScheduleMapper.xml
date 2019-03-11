@@ -121,4 +121,28 @@
     and hs.id = #{id}
   </select>
 
+  <select id="queryScheduleDateByDoctorIdAndPeriod" resultType="java.util.Date" parameterType="java.util.Map" >
+    select schedule_date
+    from h_schedule
+    where doctor_id = #{doctorId}
+    <if test="scheduleDateBegin!=null and scheduleDateBegin!=''">
+      and (schedule_date >= #{scheduleDateBegin})
+    </if>
+    <if test="scheduleDateEnd!=null and scheduleDateEnd!=''">
+      and (#{scheduleDateEnd} >= schedule_date)
+    </if>
+  </select>
+
+  <select id="queryScheduleByDoctorIdAndScheduleDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select id, doctor_id, schedule_date, morning_count, morning_total, afternoon_count,
+    afternoon_total, total, count, create_time, last_update_time, charge
+    from h_schedule
+    where doctor_id = #{doctorId}
+    <if test="scheduleDateBegin!=null and scheduleDateBegin!=''">
+      and (schedule_date >= #{scheduleDateBegin})
+    </if>
+    <if test="scheduleDateEnd!=null and scheduleDateEnd!=''">
+      and (#{scheduleDateEnd} >= schedule_date)
+    </if>
+  </select>
 </mapper>

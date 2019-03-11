@@ -1,5 +1,6 @@
 package com.xlq.hospital.controller;
 
+import com.xlq.hospital.common.DateUtil;
 import com.xlq.hospital.common.IdUtil;
 import com.xlq.hospital.common.ResultObject;
 import com.xlq.hospital.model.Order;
@@ -13,12 +14,10 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -136,7 +135,7 @@ public class AppointmentController {
 
 	/**
 	 *   生成一个新的订单
-	 * @param id  排期设置id
+	 * @param scheduleId  排期设置id
 	 * @return
 	 */
 	@RequestMapping(value = "appointment/submit")
@@ -147,6 +146,11 @@ public class AppointmentController {
 		searchSchedule.setId(scheduleId);
 		//当天排期信息
 		Schedule schedule = appointmentService.queryScheduleById(scheduleId);
+		if(schedule.getCount()>=schedule.getTotal()){
+			resultObject.setCode(-1);
+			resultObject.setMsg("抱歉，预约人数已满，请修改时间或选择其他医生");
+			return resultObject;
+		}
 		//获取预约医生信息
 		String doctorId = schedule.getDoctorId();
 		User doctor = userService.getUserByUserId(doctorId);
@@ -177,8 +181,13 @@ public class AppointmentController {
 		order.setRemark(remark);
 		order.setStatus("YYCG");
 		order.setStatusDesc("预约成功");
-		int result = appointmentService.addOrder(order);
-		if (result<1){
+		//新增订单
+		int addResult = appointmentService.addOrder(order);
+		schedule.setCount(schedule.getCount()+1);
+		//修改已预约人数
+		int updateResult = appointmentService.updateSchedule(schedule);
+
+		if (addResult<1){
 			resultObject.setCode(-1);
 			resultObject.setMsg("预约失败，请联系系统管理员");
 			return resultObject;
@@ -186,5 +195,65 @@ public class AppointmentController {
 
 		return resultObject;
 	}
+
+
+	/**
+	 * 医生功能：
+	 * 1 排期列表
+	 */
+	@RequestMapping(value = "doctor/schedule/list")
+	public String doctorScheduleList(){
+		return "doctor_schedule_list";
+	}
+	@RequestMapping(value = "doctor/getScheduleList")
+	@ResponseBody
+	public ResultObject doctorListSchedule(int page, int limit,
+	                                       @RequestParam(required = false) String scheduleDateBegin,
+	                                       @RequestParam(required = false) String scheduleDateEnd){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		resultObject= appointmentService.queryScheduleByDoctorIdAndScheduleDate(page,limit,userId,scheduleDateBegin,scheduleDateEnd);
+		return  resultObject;
+
+	}
+
+	/**
+	 * 医生功能：
+	 * 2 批量增加排期
+	 */
+	@RequestMapping(value = "doctor/schedule/add")
+	public String doctorScheduleAdd(){
+		return "doctor_schedule_add";
+	}
+	@RequestMapping(value = "doctor/addSchedule")
+	@ResponseBody
+	public ResultObject doctorAddSchedule(String scheduleDateBegin, String scheduleDateEnd, String total, String charge){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		List<Date> aleadyDateList = appointmentService.queryScheduleDateByDoctorIdAndPeriod(userId,scheduleDateBegin,scheduleDateEnd);
+		List<Date> newDateList = DateUtil.getDaysByDatePeriod(scheduleDateBegin,scheduleDateEnd);
+		//排除已有的时间
+		newDateList.removeAll(aleadyDateList);
+		//批量新增排期
+		for (Date date : newDateList) {
+			Schedule schedule = new Schedule();
+			//获取随机的id
+			schedule.setId(IdUtil.getRandomId());
+			schedule.setTotal(Integer.parseInt(total));
+			schedule.setCount(0);
+			schedule.setCharge(new BigDecimal(charge));
+			schedule.setScheduleDate(date);
+			schedule.setDoctorId(userId);
+			int result = appointmentService.addSchedule(schedule);
+		}
+		resultObject.setMsg("新增成功，合计新增了"+newDateList.size()+"条");
+		return resultObject;
+	}
+
+
 
 }
