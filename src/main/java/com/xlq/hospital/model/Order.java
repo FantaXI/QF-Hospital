@@ -47,6 +47,36 @@ public class Order implements Serializable {
 
     private Date lastUpdateTime;
 
+    private String appointmentTimeBegin;
+
+    private String appointmentTimeEnd;
+
+    private String key;
+
+    public String getAppointmentTimeBegin() {
+        return appointmentTimeBegin;
+    }
+
+    public void setAppointmentTimeBegin(String appointmentTimeBegin) {
+        this.appointmentTimeBegin = appointmentTimeBegin;
+    }
+
+    public String getAppointmentTimeEnd() {
+        return appointmentTimeEnd;
+    }
+
+    public void setAppointmentTimeEnd(String appointmentTimeEnd) {
+        this.appointmentTimeEnd = appointmentTimeEnd;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public String getId() {

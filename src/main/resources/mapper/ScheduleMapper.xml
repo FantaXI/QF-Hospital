@@ -39,9 +39,6 @@
       <if test="doctorId!=null and doctorId!=''">
         doctor_id = #{doctorId,jdbcType=VARCHAR},
       </if>
-      <if test="scheduleDate!=null and scheduleDate!=''">
-        schedule_date = #{scheduleDate,jdbcType=DATE},
-      </if>
       <if test="morningCount!=null and morningCount!=''">
         morning_count = #{morningCount,jdbcType=INTEGER},
       </if>

@@ -163,11 +163,11 @@ public class AppointmentController {
 
 		//随机生成订单id和订单编码
 		String orderId = IdUtil.getRandomId();
-		String orderCode = IdUtil.getRandomId();
+		//String orderCode = IdUtil.getRandomId();
 		Order order = new Order();
 		//设置订单信息
 		order.setId(orderId);
-		order.setOrderCode(orderCode);
+		//order.setOrderCode(orderCode);
 		order.setPatientId(patient.getId());
 		order.setDoctorId(doctor.getId());
 		order.setDepartmentId(doctor.getDoctorInfo().getDepartmentId());
@@ -179,8 +179,8 @@ public class AppointmentController {
 		order.setAppointmentTime(schedule.getScheduleDate());
 		order.setAppointmentFee(schedule.getCharge());
 		order.setRemark(remark);
-		order.setStatus("YYCG");
-		order.setStatusDesc("预约成功");
+		order.setStatus("DZZ");
+		order.setStatusDesc("待诊治");
 		//新增订单
 		int addResult = appointmentService.addOrder(order);
 		schedule.setCount(schedule.getCount()+1);
@@ -253,6 +253,38 @@ public class AppointmentController {
 		resultObject.setMsg("新增成功，合计新增了"+newDateList.size()+"条");
 		return resultObject;
 	}
+
+	/**
+	 * 医生功能
+	 * 3.医生订单列表功能
+	 * @return
+	 */
+	@RequestMapping(value = "doctor/order/list")
+	public String doctorOrderList(){
+		return "doctor_order_list";
+	}
+	@RequestMapping(value = "doctor/getOrderList")
+	@ResponseBody
+	public ResultObject doctorListOrder(int page, int limit,
+	                                       @RequestParam(required = false) String key,
+	                                       @RequestParam(required = false) String status,
+	                                       @RequestParam(required = false) String appointmentTimeBegin,
+	                                       @RequestParam(required = false) String appointmentTimeEnd){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		Order searchOrder = new Order();
+		searchOrder.setKey(key);
+		searchOrder.setStatus(status);
+		searchOrder.setAppointmentTimeBegin(appointmentTimeBegin);
+		searchOrder.setAppointmentTimeEnd(appointmentTimeEnd);
+
+		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
+		return  resultObject;
+
+	}
+
 
 
 

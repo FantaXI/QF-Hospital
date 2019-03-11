@@ -32,20 +32,18 @@
     <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into h_order (order_code, patient_id, doctor_id, 
+    insert into h_order (id,order_code, patient_id, doctor_id,
       department_id, doctor_name, doctor_mobile, 
       patient_name, patient_mobile, patient_id_card, 
       appointment_time, remark, appointment_fee, 
       treat_fee, resut_desc, score, 
-      evaluate, "status", status_desc, 
-      create_time, last_update_time)
-    values (#{orderCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR}, 
+      evaluate, status, status_desc)
+    values (#{id},#{orderCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR},
       #{departmentId,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, #{doctorMobile,jdbcType=VARCHAR}, 
       #{patientName,jdbcType=VARCHAR}, #{patientMobile,jdbcType=VARCHAR}, #{patientIdCard,jdbcType=VARCHAR}, 
       #{appointmentTime,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, #{appointmentFee,jdbcType=DECIMAL}, 
       #{treatFee,jdbcType=DECIMAL}, #{resutDesc,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
-      #{evaluate,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{statusDesc,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP})
+      #{evaluate,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{statusDesc,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Order" >
     update h_order
@@ -65,7 +63,7 @@
       resut_desc = #{resutDesc,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER},
       evaluate = #{evaluate,jdbcType=VARCHAR},
-      "status" = #{status,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
       status_desc = #{statusDesc,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
@@ -81,7 +79,70 @@
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
     patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
-    treat_fee, resut_desc, score, evaluate, "status", status_desc, create_time, last_update_time
+    treat_fee, resut_desc, score, evaluate, status, status_desc, create_time, last_update_time
     from h_order
+  </select>
+  <select id="queryOrderByKey" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.Order" >
+    select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile,
+    patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee,
+    treat_fee, resut_desc, score, evaluate, status, status_desc, create_time, last_update_time
+    from (h_order)
+    <where>
+      <if test="key!=null and key!=''">
+        and ( id like CONCAT('%',#{key},'%') or doctor_name like CONCAT('%',#{key},'%') or
+        doctor_mobile like CONCAT('%',#{key},'%') or  patient_name like CONCAT('%',#{key},'%') or
+        patient_mobile like CONCAT('%',#{key},'%') or  patient_id_card like CONCAT('%',#{key},'%') )
+      </if>
+      <if test="appointmentTimeBegin!=null and appointmentTimeBegin!=''">
+        and (appointment_time >= #{appointmentTimeBegin})
+      </if>
+      <if test="appointmentTimeEnd!=null and appointmentTimeEnd!=''">
+        and (#{appointmentTimeEnd} >= appointment_time)
+      </if>
+      <if test="status!=null and status !=''">
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+
+
+      <if test="id!=null and id!=''">
+        and id = #{id}
+      </if>
+      <if test="doctorId!=null and doctorId!=''">
+        and doctor_id = #{doctorId}
+      </if>
+      <if test="patientId!=null and patientId!=''">
+        and patient_id = #{patientId}
+      </if>
+      <if test="departmentId!=null and departmentId!=''">
+        and department_id = #{departmentId}
+      </if>
+      <if test="doctorName!=null and doctorName!=''">
+        and doctor_name = #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorMobile!=null and doctorMobile!=''">
+        and doctor_mobile = #{doctorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName!=null and patientName!=''">
+         and patient_name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientMobile!=null and patientMobile!=''">
+         and patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientIdCard!=null and patientIdCard!=''">
+         and patient_id_card = #{patientIdCard,jdbcType=DATE},
+      </if>
+      <if test="appointmentTime!=null and appointmentTime!=''">
+        and appointment_time = #{appointmentTime,jdbcType=DATE},
+      </if>
+      <if test="remark!=null and remark!=''">
+        and remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="patientMobile!=null and patientMobile!=''">
+        and  patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientMobile!=null and patientMobile!=''">
+        and patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+      </if>
+    </where>
   </select>
 </mapper>

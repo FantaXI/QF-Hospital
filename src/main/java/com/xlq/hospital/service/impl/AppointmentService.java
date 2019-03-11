@@ -210,4 +210,24 @@ public class AppointmentService {
 	                                                       String scheduleDateBegin, String scheduleDateEnd){
 		return scheduleDao.queryScheduleDateByDoctorIdAndPeriod(doctorId,scheduleDateBegin,scheduleDateEnd);
 	}
+
+	/**
+	 * 根据传入订单信息和时间段查询订单
+	 * @param page
+	 * @param limit
+	 * @param order
+	 * @return
+	 */
+	public ResultObject queryOrderByKey(int page, int limit, Order order){
+
+		ResultObject resultObject = new ResultObject();
+		Page objectPage = PageHelper.startPage(page,limit);
+		List<Order> list = orderDao.queryOrderByKey(order);
+		// 取分页信息
+		PageInfo pageInfo = new PageInfo(objectPage);
+		int total = (int)pageInfo.getTotal(); //获取总记录数
+		resultObject.setCount(total);
+		resultObject.setData(list);
+		return resultObject;
+	}
 }
