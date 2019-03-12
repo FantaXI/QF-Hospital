@@ -46,8 +46,8 @@
 
     <!--操作-->
     <script type="text/html" id="userListBar">
-        <a class="layui-btn layui-btn-xs" lay-event="">查看</a>
-        <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="del">处理</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">处理</a>
+        <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="">查看</a>
     </script>
 </form>
 <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
@@ -178,18 +178,25 @@
             var index = layui.layer.open({
                 title : "编辑",
                 type : 2,
-                content : /*[[@{/admin/schedule/edit}]]*/,
+                content : /*[[@{/doctor/order/edit}]]*/,
                 success : function(layero, index){
                     var body = layui.layer.getChildFrame('body', index);
                     if(edit){
-                        body.find(".scheduleDate").val(getformat(edit.scheduleDate,"yyyy-MM-dd"));
-                        body.find(".scheduleId").val(edit.id);
-                        body.find(".departmentName").val(edit.departmentName);
-                        body.find(".mobile").val(edit.mobile)
+                        body.find(".orderId").val(edit.id);
+                        body.find(".appointmentTime").val(getformat(edit.appointmentTime,"yyyy-MM-dd"));
+                        body.find(".statusDesc").val(edit.statusDesc);
+                        body.find(".patientName").val(edit.patientName);
+                        body.find(".patientMobile").val(edit.patientMobile);
+                        body.find(".patientIdCard").val(edit.patientIdCard);
                         body.find(".doctorName").val(edit.doctorName);
-                        body.find(".count").val(edit.count);
-                        body.find(".total").val(edit.total);
-                        body.find(".charge").val(edit.charge);
+                        body.find(".doctorMobile").val(edit.doctorMobile);
+                        body.find(".remark").val(edit.remark);
+                        body.find(".appointmentFee").val(edit.appointmentFee);
+                        body.find(".score").val(edit.score);
+                        body.find(".resultDesc").val(edit.resultDesc);
+                        body.find(".evaluate").val(edit.evaluate);
+                        body.find(".createTime").val(getformat(edit.createTime,"yyyy-MM-dd hh:mm:ss"));
+                        body.find(".lastUpdateTime").val(getformat(edit.lastUpdateTime,"yyyy-MM-dd hh:mm:ss"));
                         form.render();
                     }
                     setTimeout(function(){
@@ -207,7 +214,7 @@
             })
         }
         //列表操作
-        table.on('tool(scheduleList)', function(obj){
+        table.on('tool(orderList)', function(obj){
             var layEvent = obj.event,
                 data = obj.data;
 

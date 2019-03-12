@@ -284,7 +284,21 @@ public class AppointmentController {
 		return  resultObject;
 
 	}
+	/**
+	 * 医生功能：
+	 * 4 编辑订单
+	 */
+	@RequestMapping(value = "doctor/order/edit")
+	public String doctorOrderEdit(){
+		return "doctor_order_edit";
+	}
+	@RequestMapping(value = "doctor/editOrder")
+	@ResponseBody
+	public ResultObject doctorEditOrder(Order order){
+		ResultObject resultObject = new ResultObject();
 
+		return  resultObject;
+	}
 
 
 
