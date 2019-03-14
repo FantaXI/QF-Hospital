@@ -15,23 +15,32 @@
 <body class="childrenBody">
 <form class="layui-form" style="width:80%;">
 
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">订单编号</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input orderId" lay-verify="required" readonly>
-        </div>
-    </div>
     <div class="layui-row">
-        <div class="magb15 layui-col-md4 layui-col-xs12">
-            <label class="layui-form-label">订单创建时间</label>
-            <div class="layui-input-block userSex">
-                <input type="text" class="layui-input createTime">
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">订单编号</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input orderId" readonly>
             </div>
         </div>
-        <div class="magb15 layui-col-md4 layui-col-xs12">
-            <label class="layui-form-label">订单最后更改时间</label>
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">订单状态</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input lastUpdateTime">
+                <input type="text" class="layui-input statusDesc" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input createTime" readonly>
+            </div>
+        </div>
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">最后更改时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input lastUpdateTime" readonly>
             </div>
         </div>
     </div>
@@ -41,79 +50,89 @@
             <input type="text" class="layui-input appointmentTime" readonly>
         </div>
     </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
+    <div class="layui-row">
+    <div class="magb15 layui-col-md6 layui-col-xs12">
         <label class="layui-form-label">医生姓名</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input doctorName">
+            <input type="text" class="layui-input doctorName" readonly>
         </div>
     </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">医生联系方式</label>
+    <div class="magb15 layui-col-md6 layui-col-xs12">
+        <label class="layui-form-label">医生手机</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input doctorMobile">
+            <input type="text" class="layui-input doctorMobile" readonly>
+        </div>
+    </div>
+    </div>
+    <div class="layui-row">
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">用户姓名</label>
+            <div class="layui-input-block userSex">
+                <input type="text" class="layui-input patientName" readonly>
+            </div>
+        </div>
+        <div class="magb15 layui-col-md6 layui-col-xs12">
+            <label class="layui-form-label">用户手机</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input patientMobile" readonly>
+            </div>
         </div>
     </div>
     <div class="layui-form-item layui-row layui-col-xs12">
         <label class="layui-form-label">用户身份证号</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input patientIdCard">
+            <input type="text" class="layui-input patientIdCard" readonly>
         </div>
     </div>
 
-    <div class="layui-row">
-        <div class="magb15 layui-col-md4 layui-col-xs12">
-            <label class="layui-form-label">用户姓名</label>
-            <div class="layui-input-block userSex">
-                <input type="text" class="layui-input patientName">
+    <div id="evaluate_div">
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">评分</label>
+            <div class="layui-input-block" id="score">
             </div>
         </div>
-        <div class="magb15 layui-col-md4 layui-col-xs12">
-            <label class="layui-form-label">用户联系方式</label>
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">用户评价</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input patientMobile">
+                <textarea  class="layui-textarea evaluate"  placeholder="请输入评价内容" readonly></textarea>
             </div>
         </div>
     </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">评分</label>
-        <div class="layui-input-block" id="score">
-        </div>
-    </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">用户评价</label>
-        <div class="layui-input-block">
-            <textarea  class="layui-textarea evaluate"  placeholder="请输入评价内容"></textarea>
-        </div>
-    </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">结束状态</label>
-        <div class="layui-input-block">
-            <div class="layui-input-inline" style="width:180px">
-                <select id="status" name="status" style="width: 180px" lay-verify="">
-                    <option value="">选择处理结果</option>
-                    <option value="YWC">已完成</option>
-                    <option value="YHSY">用户爽约</option>
-                </select>
+
+    <div id="result_div">
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">结束状态</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline" style="width:180px">
+                    <select id="status" name="status" style="width: 180px" lay-verify="required" >
+                        <option value="">选择处理结果</option>
+                        <option value="YZZ">已诊治</option>
+                        <option value="YHSY">用户爽约</option>
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <label class="layui-form-label">结果描述</label>
-        <div class="layui-input-block">
-            <textarea  class="layui-textarea resultDesc"  placeholder="请输入描述"></textarea>
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">结果描述</label>
+            <div class="layui-input-block">
+                <textarea  class="layui-textarea resultDesc"  lay-verify="required" placeholder="请输入描述" readonly></textarea>
+            </div>
+        </div>
+        <input type="hidden" class="layui-input score" >
+        <input type="hidden" class="layui-input status" >
+        <div id="button_div">
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="editOrder">完成</button>
+                <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">取消</button>
+            </div>
+        </div>
         </div>
     </div>
 
 
-    <input type="hidden" class="layui-input score" >
 
 
-    <div class="layui-form-item layui-row layui-col-xs12">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="editOrder">完成</button>
-            <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">取消</button>
-        </div>
-    </div>
 </form>
 <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
 <script th:inline="javascript">
@@ -130,15 +149,28 @@
                 readonly:true,
             });
 
+            function display(){
+                if ($(".status").val()=='DZZ'){
+                    $("#evaluate_div").hide();
+                    $(".resultDesc").attr("readOnly",false);
+                } else if ($(".status").val()=='YHQX' ||$(".status").val()=='DPJ'||$(".status").val()=='YHSY'){
+                    $("#evaluate_div").hide();
+                    $("#button_div").hide();
+                }else if ($(".status").val()=='YWC') {
+                    $("#button_div").hide();
+                }
+            }
+            display();
+
+
             form.on("submit(editOrder)",function(data){
                 //弹出loading
                 var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
                 $.post(/*[[@{/doctor/editOrder}]]*/,{
-                    id : $(".orderId").val(),  //姓名
-                    resultDesc :$(".resultDesc"),
+                    id : $(".orderId").val(),
+                    resultDesc :$(".resultDesc").val(),
                     status: $("#status").val(),
-                    userId : $(".userId").val(),
-                    patientId : $(".patientId").val(),
+                    statusDesc: $("#status option:selected").text(),
                 },function(res){
                     if (res.code<0){
                         top.layer.msg(res.msg);

@@ -15,6 +15,8 @@ public class Comment implements Serializable {
 
     private String mainId;
 
+    private String mainCommentContent;
+
     private String commentType;
 
     private String checkResult;
@@ -24,7 +26,25 @@ public class Comment implements Serializable {
     private Date createTime;
 
     private Date lastUpdateTime;
-    
+
+    private String key;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getMainCommentContent() {
+        return mainCommentContent;
+    }
+
+    public void setMainCommentContent(String mainCommentContent) {
+        this.mainCommentContent = mainCommentContent;
+    }
+
     private List<Comment> replyList;
     
     public List<Comment> getReplyList() {

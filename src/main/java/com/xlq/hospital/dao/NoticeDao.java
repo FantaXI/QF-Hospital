@@ -15,4 +15,6 @@ public interface NoticeDao {
     int getNoticeCount(String type);
     
     int updateByPrimaryKey(Notice record);
+
+    List<Notice> queryNoticeByKey(Notice notice);
 }

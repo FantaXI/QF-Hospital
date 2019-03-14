@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
 <title>详细内容</title>
@@ -115,9 +115,44 @@ body {
 	text-align: center;
 	padding: 20px 0px;
 }
-
-.notice {}
-.news{}
+.tz_notice_nr{
+	width: 1000px;
+	margin: 0 auto;
+	overflow: hidden;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.tz_nr_top {
+	width: 1000px;
+	height: 38px;
+	line-height: 38px;
+	background: #eaeef5;
+	margin-top: 20px;
+	margin: 0 auto;
+}
+.tz_nr_content {
+	width: 906px;
+	overflow: hidden;
+	border: 1px solid #eaeef5;
+	margin: 0 auto;
+	padding-top: 20px;
+	padding: 20px 49px 0px 42px;
+	font-size: 14px;
+	padding-bottom: 40px;
+	min-height: 500px;
+	_height: 500px;
+}
+.state{
+	padding-left: 20px ;
+}
+.createTime{
+	float:right;
+	padding-right: 20px ;
+}
+.noticeTitle{
+	margin: 10px;
+	text-align:center;
+}
 
 .main{border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;
 }
@@ -161,29 +196,22 @@ body {
 		</ul>
 
 </br></br>
-<div class="layui-row ">
-		
-			<div class="layui-col-md10 " >	
-				<section style="background: #fff; font-size: 16px;">	
-			<span>最新公告</span>			
-					</section>
+		<div class="tz_notice_nr">
+			<div class="tz_nr_top">
+				<span class="state" th:if="${noticeInfo.state} =='1'">新闻</span>
+				<span class="state" th:if="${noticeInfo.state} == '2'">公告</span>
+				<span class="createTime" th:text="${#dates.format(noticeInfo.createTime, 'yyyy年MM月dd日')}"></span>
 			</div>
-</div>
 
-<div class="layui-row main">
-		
-			<div class="layui-col-md10">	
-				<section style="background: #fff; font-size: 16px;">
-				<h1>公告标题</h1>			
-									
-				</section>			
+			<div class="tz_nr_content">
+				<h2 class="noticeTitle" th:text="${noticeInfo.noticeTitle}"></h2>
+				<div class="noticeContent" th:utext="${noticeInfo.noticeContent}"></div>
 			</div>
-			<div id= "noticePage"></div>
+		</div>
+
+
+
 </div>
-	
-
-
-
 	<div class="footer">
 		<p>清风医院预约门诊统一平台</p>
 		<p>技术支持：XLQ</p>

@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.xlq.hospital.model.Comment" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
+    <result column="main_comment_content" property="mainCommentContent" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="main_id" property="mainId" jdbcType="VARCHAR" />
@@ -16,6 +17,10 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from h_comment
     where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByMainId" parameterType="java.lang.String" >
+    delete from h_comment
+    where main_id = #{mainId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.xlq.hospital.model.Comment" >
     <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
@@ -111,5 +116,27 @@
     		AND state = #{state}
     	</if>
 	 </where>
+  </select>
+
+    <select id="queryCommentByAdmin" parameterType="com.xlq.hospital.model.Comment"  resultMap="BaseResultMap" >
+    SELECT c1.id, c1.comment_content, c1.user_id, c1.user_name, c1.main_id, c1.comment_type, c1.check_result, c1.state, c1.create_time, c1.last_update_time,c2.comment_content main_comment_content
+    from h_comment c1
+    left join h_comment c2
+    on c1.main_id = c2.id
+        <where>
+    <if test="commentType!=null and commentType!=''">
+        and c1.comment_type = #{commentType}
+    </if>
+    <if test="key!=null and key!=''">
+        and (c1.id = #{key} or c1.main_id = #{key}  or c1.user_name like CONCAT('%',#{key} ,'%') or c1.comment_content like CONCAT('%',#{key} ,'%')  )
+    </if>
+      </where>
+    </select>
+
+    <select id="selectCommentByMainId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, comment_content, user_id, user_name, main_id, comment_type, check_result,
+    state, create_time, last_update_time
+    from h_comment
+    where main_id = #{mainId,jdbcType=VARCHAR}
   </select>
 </mapper>

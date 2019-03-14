@@ -16,7 +16,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="appointment_fee" property="appointmentFee" jdbcType="DECIMAL" />
     <result column="treat_fee" property="treatFee" jdbcType="DECIMAL" />
-    <result column="resut_desc" property="resutDesc" jdbcType="VARCHAR" />
+    <result column="result_desc" property="resultDesc" jdbcType="VARCHAR" />
     <result column="score" property="score" jdbcType="INTEGER" />
     <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
@@ -36,56 +36,88 @@
       department_id, doctor_name, doctor_mobile, 
       patient_name, patient_mobile, patient_id_card, 
       appointment_time, remark, appointment_fee, 
-      treat_fee, resut_desc, score, 
+      treat_fee, result_desc, score, 
       evaluate, status, status_desc)
     values (#{id},#{orderCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR},
       #{departmentId,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, #{doctorMobile,jdbcType=VARCHAR}, 
       #{patientName,jdbcType=VARCHAR}, #{patientMobile,jdbcType=VARCHAR}, #{patientIdCard,jdbcType=VARCHAR}, 
       #{appointmentTime,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, #{appointmentFee,jdbcType=DECIMAL}, 
-      #{treatFee,jdbcType=DECIMAL}, #{resutDesc,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
+      #{treatFee,jdbcType=DECIMAL}, #{resultDesc,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
       #{evaluate,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{statusDesc,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Order" >
     update h_order
-    set order_code = #{orderCode,jdbcType=VARCHAR},
-      patient_id = #{patientId,jdbcType=VARCHAR},
-      doctor_id = #{doctorId,jdbcType=VARCHAR},
-      department_id = #{departmentId,jdbcType=VARCHAR},
-      doctor_name = #{doctorName,jdbcType=VARCHAR},
-      doctor_mobile = #{doctorMobile,jdbcType=VARCHAR},
-      patient_name = #{patientName,jdbcType=VARCHAR},
+    <set>
+      <if test="patientId!=null and patientId!=''">
+        patient_id = #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorId!=null and doctorId!=''">
+        doctor_id = #{doctorId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId!=null and departmentId!=''">
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorName!=null and doctorName!=''">
+        doctor_name = #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorMobile!=null and doctorMobile!=''">
+        doctor_mobile = #{doctorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName!=null and patientName!=''">
+        patient_name = #{patientName,jdbcType=VARCHAR},
+      </if><if test="patientMobile!=null and patientMobile!=''">
       patient_mobile = #{patientMobile,jdbcType=VARCHAR},
-      patient_id_card = #{patientIdCard,jdbcType=VARCHAR},
-      appointment_time = #{appointmentTime,jdbcType=DATE},
-      remark = #{remark,jdbcType=VARCHAR},
-      appointment_fee = #{appointmentFee,jdbcType=DECIMAL},
-      treat_fee = #{treatFee,jdbcType=DECIMAL},
-      resut_desc = #{resutDesc,jdbcType=VARCHAR},
-      score = #{score,jdbcType=INTEGER},
-      evaluate = #{evaluate,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      status_desc = #{statusDesc,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="patientIdCard!=null and patientIdCard!=''">
+        patient_id_card = #{patientIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmentTime!=null and appointmentTime!=''">
+        appointment_time = #{appointmentTime,jdbcType=DATE},
+      </if>
+      <if test="remark!=null and remark!=''">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmentFee!=null and appointmentFee!=''">
+        appointment_fee = #{appointmentFee,jdbcType=DECIMAL},
+      </if>
+      <if test="treatFee!=null and treatFee!=''">
+        treat_fee = #{treatFee,jdbcType=DECIMAL},
+      </if>
+      <if test="resultDesc!=null and resultDesc!=''">
+        result_desc = #{resultDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="score!=null and score!=''">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="evaluate!=null and evaluate!=''">
+        evaluate = #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="status!=null and status!=''">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDesc!=null and statusDesc!=''">
+        status_desc = #{statusDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
     patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
-    treat_fee, resut_desc, score, evaluate, "status", status_desc, create_time, last_update_time
+    treat_fee, result_desc, score, evaluate, "status", status_desc, create_time, last_update_time
     from h_order
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
     patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
-    treat_fee, resut_desc, score, evaluate, status, status_desc, create_time, last_update_time
+    treat_fee, result_desc, score, evaluate, status, status_desc, create_time, last_update_time
     from h_order
   </select>
   <select id="queryOrderByKey" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.Order" >
     select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile,
     patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee,
-    treat_fee, resut_desc, score, evaluate, status, status_desc, create_time, last_update_time
+    treat_fee, result_desc, score, evaluate, status, status_desc, create_time, last_update_time
     from (h_order)
     <where>
       <if test="key!=null and key!=''">

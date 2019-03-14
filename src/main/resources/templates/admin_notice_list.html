@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>用户中心--layui后台管理模板 2.0</title>
+    <title>文章列表-管理员</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,36 +17,34 @@
     <blockquote class="layui-elem-quote quoteBox">
         <form class="layui-form">
             <div class="layui-inline">
-                <input type="text" id="appointmentTimeBegin" class="" style="height: 38px; " placeholder="起始日期" />
-                <input type="text" id="appointmentTimeEnd" class=" " style="height: 38px;" placeholder="结束日期" />
-            </div>
-            <br>
-            <div class="layui-inline">
                 <div class="layui-input-inline" style="width:180px">
-                    <select id="status" name="status" style="width: 180px" lay-verify="">
-                        <option value="">选择订单状态</option>
-                        <option value="DZZ">待诊治</option>
-                        <option value="DPJ">待评价</option>
-                        <option value="YWC">已完成</option>
-                        <option value="YHQX">用户取消</option>
-                        <option value="YHSY">用户爽约</option>
+                    <select id="state" name="state" style="width: 180px" lay-verify="">
+                        <option value="">选择文章类型</option>
+                        <option value="1">公告</option>
+                        <option value="2">新闻</option>
                     </select>
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input searchVal" style="width: 180px" placeholder="输入患者/医生信息搜索" />
+                    <input type="text" class="layui-input searchVal" style="width: 180px" placeholder="输入文章标题搜索" />
                 </div>
+                <a class="layui-btn search_btn" data-type="reload">搜索</a>
             </div>
-            <a class="layui-btn search_btn" data-type="reload">搜索</a>
+
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal addNews_btn">发表文章</a>
+            </div>
             <!--div class="layui-inline">
                 <a class="layui-btn layui-btn-danger layui-btn-normal delAll_btn">批量删除</a>
             </div-->
         </form>
     </blockquote>
-    <table id="orderList" lay-filter="orderList"></table>
+    <table id="noticeList" lay-filter="noticeList"></table>
 
     <!--操作-->
     <script type="text/html" id="userListBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">查看/处理</a>
+        <a class="layui-btn layui-btn-xs" lay-event="preview">预览</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="del">删除</a>
     </script>
 </form>
 <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
@@ -93,65 +91,55 @@
         return dateformat;
     }
 
-
     var col = [
-        {field: 'id', title: '订单编号', minWidth:100, align:"center"},
-        {field: 'appointmentTime', title: '预约门诊日期', minWidth:100, align:'center',templet:function(d){return getformat(d.appointmentTime,"yyyy/MM/dd")}},
-        {field: 'patientName', title: '患者姓名', minWidth:100, align:'center'},
-        {field: 'patientMobile', title: '患者电话', minWidth:100, align:'center'},
-        {field: 'patientIdCard', title: '患者身份证号', minWidth:100, align:'center',templet:function(d){return d.patientIdCard+"元"}},
-        {field: '', title: '预约费用', minWidth:100, align:'center',templet:function(d){return d.appointmentFee+"元"}},
-        {field: 'createTime', title: '下单时间', minWidth:100, align:'center',templet:function(d){return getformat(d.createTime,"yyyy/MM/dd hh:mm:ss")}},
-        {field: 'statusDesc', title: '订单状态', minWidth:100, align:'center'},
+        {field: 'id', title: '编号', minWidth:100, align:'center'},
+        {field: 'noticeTitle', title: '标题', minWidth:400, align:"center"},
+        {field: 'state', title: '文章类型', minWidth:100, align:"center",templet:function (d) {
+                if (d.state=="1"){return "公告";} else if(d.state=="2"){return "新闻";}
+        }},
+        {field: 'createTime', title: '发布时间',sort:true, minWidth:100, align:'center',templet:function (d) {
+                return getformat(d.createTime,"yyyy/MM/dd hh:mm:ss")
+        }},
         {title: '操作', minWidth:175, templet:'#userListBar',fixed:"right",align:"center"}];
-    layui.use(['form','layer','table','laytpl','laydate'],function() {
+    layui.use(['form','layer','table','laytpl'],function() {
         var form = layui.form,
-            laydate = layui.laydate,
             layer = parent.layer === undefined ? layui.layer : top.layer,
             $ = layui.jquery,
             laytpl = layui.laytpl,
             table = layui.table;
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#appointmentTimeBegin' //指定元素
-        });
-        laydate.render({
-            elem: '#appointmentTimeEnd' //指定元素
-        });
+
         //列表
         var tableIns = table.render({
-            elem: '#orderList',
-            url: /*[[@{/doctor/getOrderList}]]*/,
+            elem: '#noticeList',
+            url: /*[[@{/admin/getNoticeList}]]*/,
             cellMinWidth: 95,
             page: true,
             height: "full-125",
             limits: [10, 15, 20, 25],
             limit: 20,
-            id: "newOrderListTable",
+            id: "newNoticeListTable",
             cols: [col]
         });
 
         //搜索
         $(".search_btn").on("click", function () {
 
-            table.reload("newOrderListTable", {
+            table.reload("newNoticeListTable", {
                 page: {
                     curr: 1 //重新从第 1 页开始
                 },
                 where: {
-                    key: $(".searchVal").val(),
-                    status: $("#status").val(),
-                    appointmentTimeBegin: $("#appointmentTimeBegin").val(),
-                    appointmentTimeEnd: $("#appointmentTimeEnd").val(),
+                    key: $(".searchVal").val(),  //搜索的关键字
+                    state: $("#state").val()
                 }
             })
 
         });
-        function addOrder(){
+        function addNotice(){
             var index = layui.layer.open({
-                title : "添加",
+                title : "发布文章",
                 type : 2,
-                content : /*[[@{/doctor/order/add}]]*/,
+                content : /*[[@{/admin/notice/add}]]*/,
                 success : function(layero, index){
                     var body = layui.layer.getChildFrame('body', index);
                     setTimeout(function(){
@@ -170,37 +158,58 @@
         }
 
         $(".addNews_btn").click(function(){
-            addOrder();
+            addNotice();
         })
-        //修改
-        function editOrder(edit){
+        //修改用户
+        function editNotice(edit){
             var index = layui.layer.open({
-                title : "编辑",
+                title : "编辑疾病",
                 type : 2,
-                content : /*[[@{/doctor/order/edit}]]*/,
+                content : /*[[@{/admin/notice/edit}]]*/,
                 success : function(layero, index){
                     var body = layui.layer.getChildFrame('body', index);
                     if(edit){
-                        body.find(".orderId").val(edit.id);
-                        body.find(".appointmentTime").val(getformat(edit.appointmentTime,"yyyy-MM-dd"));
-                        body.find(".status").val(edit.status);
-                        body.find(".statusDesc").val(edit.statusDesc);
-                        body.find(".patientName").val(edit.patientName);
-                        body.find(".patientMobile").val(edit.patientMobile);
-                        body.find(".patientIdCard").val(edit.patientIdCard);
-                        body.find(".doctorName").val(edit.doctorName);
-                        body.find(".doctorMobile").val(edit.doctorMobile);
-                        body.find(".remark").val(edit.remark);
-                        body.find(".appointmentFee").val(edit.appointmentFee);
-                        body.find(".score").val(edit.score);
-                        body.find(".resultDesc").val(edit.resultDesc);
-                        body.find(".evaluate").val(edit.evaluate);
-                        body.find(".createTime").val(getformat(edit.createTime,"yyyy-MM-dd hh:mm:ss"));
-                        body.find(".lastUpdateTime").val(getformat(edit.lastUpdateTime,"yyyy-MM-dd hh:mm:ss"));
+                        body.find(".id").val(edit.id);
+                        body.find(".noticeContent").val(edit.noticeContent);
+                        body.find(".noticeTitle").val(edit.noticeTitle);
+                        body.find(".state").val(edit.diseaseDesc);
                         form.render();
                     }
                     setTimeout(function(){
-                        layui.layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
+                        layui.layer.tips('点击此处返回文章列表', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layui.layer.full(window.sessionStorage.getItem("index"));
+            })
+        }
+
+        function previewNotice(edit){
+            var index = layui.layer.open({
+                title : "预览文章",
+                type : 2,
+                content : /*[[@{/admin/notice/preview}]]*/,
+                success : function(layero, index){
+                    var body = layui.layer.getChildFrame('body', index);
+                    if(edit){
+                        body.find(".noticeContent").html(edit.noticeContent);
+                        body.find(".noticeTitle").html(edit.noticeTitle);
+                        if(edit.state=='1'){
+                            body.find(".state").html("公告");
+                        }else{
+                            body.find(".state").html("新闻");
+                        }
+                        body.find(".createTime").html(getformat(edit.createTime,'yyyy年MM月dd日'));
+                        form.render();
+                    }
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回文章列表', '.layui-layer-setwin .layui-layer-close', {
                             tips: 3
                         });
                     },500)
@@ -214,17 +223,24 @@
             })
         }
         //列表操作
-        table.on('tool(orderList)', function(obj){
+        table.on('tool(noticeList)', function(obj){
             var layEvent = obj.event,
                 data = obj.data;
-
-            if(layEvent === 'edit'){ //编辑
-                editOrder(data);
+            if(layEvent === 'preview'){
+                previewNotice(data);
+            }else if(layEvent === 'edit'){ //编辑
+                editNotice(data);
             }else if(layEvent === 'del'){ //删除科室
-                layer.confirm('您没有删除排班的权限，请联系管理员',{icon:3, title:'提示信息'},function(index){
-                    tableIns.reload();
-                    layer.close(index);
-
+                layer.confirm('确定删除该文章？',{icon:3, title:'提示信息'},function(index){
+                    $.get(/*[[@{/admin/delNotice}]]*/,{
+                        id : data.id ,  //将Id作为参数传入
+                    },function(data){
+                        if (data.code < 0){
+                            top.layer.msg(data.msg);
+                        }
+                        tableIns.reload();
+                        layer.close(index);
+                    })
                 });
             }
         });

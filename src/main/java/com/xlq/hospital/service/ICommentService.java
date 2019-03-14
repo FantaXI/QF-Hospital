@@ -2,7 +2,9 @@ package com.xlq.hospital.service;
 
 import java.util.List;
 
+import com.xlq.hospital.common.ResultObject;
 import com.xlq.hospital.model.Comment;
+import com.xlq.hospital.model.Notice;
 
 public interface ICommentService {
 	/**
@@ -19,4 +21,8 @@ public interface ICommentService {
 	public int addComment(Comment comment);
 	
 	public Comment getCommentById(String id);
+
+	public ResultObject queryCommentByAdmin(int page, int limit, Comment comment);
+
+	public int delCommentByInstruct(String id, String delAll);
 }

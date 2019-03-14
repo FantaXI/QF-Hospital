@@ -17,27 +17,25 @@
     <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into h_notice (notice_title, create_time, last_update_time, 
-      "state", notice_content)
-    values (#{noticeTitle,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP}, 
-      #{state,jdbcType=VARCHAR}, #{noticeContent,jdbcType=LONGVARCHAR})
+    insert into h_notice (id, notice_title, state, notice_content)
+    values (#{id}, #{noticeTitle,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{noticeContent,jdbcType=LONGVARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Notice" >
     update h_notice
     set notice_title = #{noticeTitle,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
-      "state" = #{state,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
       notice_content = #{noticeContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select id, notice_title, create_time, last_update_time, "state", notice_content
+    select id, notice_title, create_time, last_update_time, state, notice_content
     from h_notice
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select id, notice_title, create_time, last_update_time, "state", notice_content
+    select id, notice_title, create_time, last_update_time, state, notice_content
     from h_notice 
     <where>
     <if test='_parameter!= "A" ' >
@@ -56,5 +54,19 @@
     </if> 
     </where>
   </select>
-  
+
+  <select id="queryNoticeByKey" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.Notice" >
+    select id, notice_title, create_time, last_update_time, state, notice_content
+    from h_notice
+    <where>
+      <if test="state!=null and state !=''">
+        and state = #{state,jdbcType=VARCHAR}
+      </if>
+      <if test="noticeTitle!=null and noticeTitle !=''">
+        and notice_title like concat('%',#{noticeTitle},'%')
+      </if>
+
+    </where>
+    ORDER BY create_time desc
+  </select>
 </mapper>

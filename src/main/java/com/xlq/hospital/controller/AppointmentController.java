@@ -296,7 +296,12 @@ public class AppointmentController {
 	@ResponseBody
 	public ResultObject doctorEditOrder(Order order){
 		ResultObject resultObject = new ResultObject();
-
+		int result = appointmentService.updateOrder(order);
+		if(result<0){
+			resultObject.setCode(-1);
+			resultObject.setMsg("编辑失败，请联系管理员！");
+			return resultObject;
+		}
 		return  resultObject;
 	}
 

@@ -230,4 +230,8 @@ public class AppointmentService {
 		resultObject.setData(list);
 		return resultObject;
 	}
+
+	public int updateOrder(Order order){
+		return orderDao.updateByPrimaryKey(order);
+	}
 }

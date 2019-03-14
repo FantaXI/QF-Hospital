@@ -33,7 +33,7 @@ public class Order implements Serializable {
 
     private BigDecimal treatFee;
 
-    private String resutDesc;
+    private String resultDesc;
 
     private Integer score;
 
@@ -191,12 +191,12 @@ public class Order implements Serializable {
         this.treatFee = treatFee;
     }
 
-    public String getResutDesc() {
-        return resutDesc;
+    public String getResultDesc() {
+        return resultDesc;
     }
 
-    public void setResutDesc(String resutDesc) {
-        this.resutDesc = resutDesc;
+    public void setResultDesc(String resutDesc) {
+        this.resultDesc = resutDesc;
     }
 
     public Integer getScore() {
@@ -267,7 +267,7 @@ public class Order implements Serializable {
         sb.append(", remark=").append(remark);
         sb.append(", appointmentFee=").append(appointmentFee);
         sb.append(", treatFee=").append(treatFee);
-        sb.append(", resutDesc=").append(resutDesc);
+        sb.append(", resutDesc=").append(resultDesc);
         sb.append(", score=").append(score);
         sb.append(", evaluate=").append(evaluate);
         sb.append(", status=").append(status);

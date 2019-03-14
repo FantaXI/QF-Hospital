@@ -18,5 +18,10 @@ public interface CommentDao {
     
     
     int queryCommentByPageCount(Comment comment);
-    
+
+    List<Comment> queryCommentByAdmin(Comment comment);
+
+    Comment selectCommentByMainId(String mainId);
+
+    int deleteByMainId(String mainId);
 }

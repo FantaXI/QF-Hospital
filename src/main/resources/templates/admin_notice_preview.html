@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户中心--layui后台管理模板 2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
+</head>
+<style>
+    .tz_notice_nr{
+        width: 1000px;
+        margin: 0 auto;
+        overflow: hidden;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .tz_nr_top {
+        width: 1000px;
+        height: 38px;
+        line-height: 38px;
+        background: #eaeef5;
+        margin-top: 20px;
+        margin: 0 auto;
+    }
+    .tz_nr_content {
+        width: 906px;
+        overflow: hidden;
+        border: 1px solid #eaeef5;
+        margin: 0 auto;
+        padding-top: 20px;
+        padding: 20px 49px 0px 42px;
+        font-size: 14px;
+        padding-bottom: 40px;
+        min-height: 500px;
+        _height: 500px;
+    }
+    .state{
+        padding-left: 20px ;
+    }
+    .createTime{
+        float:right;
+        padding-right: 20px ;
+    }
+    .noticeTitle{
+        margin: 10px;
+        text-align:center;
+    }
+</style>
+<body class="childrenBody">
+        <div class="tz_notice_nr">
+            <div class="tz_nr_top">
+                <span class="state"></span>
+                <span class="createTime"></span>
+            </div>
+
+            <div class="tz_nr_content">
+                <h2 class="noticeTitle"></h2>
+                <div class="noticeContent"></div>
+            </div>
+        </div>
+
+</body>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+</html>

@@ -5,6 +5,9 @@ import com.sun.deploy.panel.ITreeNode;
 import com.xlq.hospital.common.IdUtil;
 import com.xlq.hospital.common.ResultObject;
 import com.xlq.hospital.model.*;
+import com.xlq.hospital.service.ICommentService;
+import com.xlq.hospital.service.INoticeService;
+import com.xlq.hospital.service.IUserService;
 import com.xlq.hospital.service.impl.AppointmentService;
 import com.xlq.hospital.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +30,16 @@ import java.util.Map;
 @Controller
 public class AdminController {
 	@Autowired
-	private UserService userService;
+	private IUserService userService;
 	@Autowired
 	private AppointmentService appointmentService;
+	@Autowired
+	private ICommentService commentService;
+	@Autowired
+	private INoticeService noticeService;
+
+
+
 	@RequestMapping(value = "admin/main")
 
 	public String adminMain(){
@@ -544,5 +554,85 @@ public class AdminController {
 			return resultObject;
 		}
 		return resultObject;
+	}
+
+	/**
+	 * 留言列表
+	 *
+	 */
+	@RequestMapping(value = "admin/comment/list")
+	public String commentList(){
+		return "admin_comment_list";
+	}
+	@RequestMapping(value = "admin/getCommentList")
+	@ResponseBody
+	public ResultObject getCommentList(int page, int limit,
+	                                  @RequestParam(required = false) String key,
+	                                  @RequestParam(required = false) String commentType){
+		ResultObject resultObject = new ResultObject();
+		Comment comment = new Comment();
+		comment.setKey(key);
+		comment.setCommentType(commentType);
+		resultObject= commentService.queryCommentByAdmin(page,limit,comment);
+		return  resultObject;
+	}
+
+	/**
+	 * 删除留言
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "admin/comment/delete")
+	@ResponseBody
+	public ResultObject delComment(String id, String delAll){
+		ResultObject resultObject = new ResultObject();
+		int result = commentService.delCommentByInstruct(id,delAll);
+		if (result<1){
+			resultObject.setCode(-1);
+			resultObject.setMsg("删除留言设置失败，请联系管理员");
+			return resultObject;
+		}
+		return resultObject;
+	}
+
+
+	/**
+	 * 公告列表
+	 */
+	@RequestMapping(value = "admin/notice/list")
+	public String noticeList(){
+		return "admin_notice_list";
+	}
+	@RequestMapping(value = "admin/getNoticeList")
+	@ResponseBody
+	public ResultObject getNoticeList(int page, int limit,
+	                                   @RequestParam(required = false) String key,
+	                                   @RequestParam(required = false) String state){
+		ResultObject resultObject = new ResultObject();
+		Notice notice = new Notice();
+		notice.setNoticeTitle(key);
+		notice.setState(state);
+		resultObject= noticeService.queryNoticeByKey(page,limit,notice);
+		return  resultObject;
+	}
+	/**
+	 * 新增公告
+	 */
+	@RequestMapping(value = "admin/notice/add")
+	public String adminNoticeAdd(){
+		return "admin_notice_add";
+	}
+	@RequestMapping(value = "admin/addNotice")
+	@ResponseBody
+	public ResultObject adminAddNotice(Notice notice){
+		ResultObject resultObject = noticeService.addNotice(notice);
+		return resultObject;
+	}
+	/**
+	 * 预览文章
+	 */
+	@RequestMapping(value = "admin/notice/preview")
+	public String adminNoticePreview(){
+		return "admin_notice_preview";
 	}
 }
