@@ -62,4 +62,15 @@ public class NoticeService implements INoticeService{
 		return resultObject;
 	}
 
+	@Override
+	public int updateNotice(Notice notice) {
+		return noticeDao.updateByPrimaryKey(notice);
+	}
+
+	@Override
+	public int delNotice(String id) {
+		return noticeDao.deleteByPrimaryKey(id);
+	}
+
+
 }

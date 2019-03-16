@@ -18,6 +18,7 @@ public interface PatientInfoDao {
 
     int updateByPrimaryKey(PatientInfo record);
 
-    public List<PatientInfo> getPatientInfoByIdCard(String idCard);
+    List<PatientInfo> getPatientInfoByIdCard(String idCard);
 
+    int updatePatientByUserId(PatientInfo patientInfo);
 }

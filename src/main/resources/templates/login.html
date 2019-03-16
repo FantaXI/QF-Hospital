@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
  
     <title>登录页</title>
-    <link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
-<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
-<script src="/layui/layui.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" type="text/css">
+<script language="JavaScript" th:src="@{/js/jquery-3.2.1.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
  <style>
      .login-main{
          text-align: center; /*让div内部文字居中*/
@@ -28,7 +28,7 @@
          margin-bottom: 10px;
      }
      .body1{
-         background-image:url("/login_background.jpg");
+         background-image:url("login_background.jpg");
          background-size: 100%;
      }
  </style>

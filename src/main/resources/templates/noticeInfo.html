@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>详细内容</title>
-<link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
-<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
-<script src="/layui/layui.js"></script>
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}" type="text/css">
+<script language="JavaScript" th:src="@{/js/jquery-3.2.1.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
 <script>
 //格式化
 Date.prototype.format = function (fmt) {
@@ -162,8 +162,12 @@ body {
 	<div class="header">
 		<div class='wrap'>
 			<p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
-			<div style="float: right">
-				<a href="">登录 </a>&nbsp;|&nbsp;&nbsp;<a href="">注册</a>
+			<div style="float: right;">
+				<a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/login}">登录</i> </a>
+				<a style="color: #01AAED" th:if="${session.user != null}" th:text="${session.user.name}+',已登录'">已登录</a>
+				&nbsp;|&nbsp;&nbsp;
+				<a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/register}">注册</i> </a>
+				<a style="color: #01AAED" th:if="${session.user != null}" th:href="@{/logout}">注销</a>
 			</div>
 			<div style='clear: both;'></div>
 		</div>
@@ -173,26 +177,26 @@ body {
 
 	<div class="layui-container">
 		<div class="logo">
-			<img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+			<img alt="" th:src="@{/logo1.jpg}" style="height: 120px;width: 555px">
 		</div>
 
 		<ul class="layui-nav layui-bg-green" lay-filter="">
 			<li></li>
-			<li class="layui-nav-item"><a href="home/main">首页</a></li>
-			<li class="layui-nav-item"><a href="">按科室预约</a></li>
-			<li class="layui-nav-item"><a href="">按疾病预约</a></li>
-			<li class="layui-nav-item layui-this"><a href="">公告资讯</a>
+			<li class="layui-nav-item"><a th:href="@{/home/main}">首页</a></li>
+			<li class="layui-nav-item"><a th:href="@{/appointment/class/KS}">按科室预约</a></li>
+			<li class="layui-nav-item"><a th:href="@{/appointment/class/JB}">按疾病预约</a></li>
+			<li class="layui-nav-item layui-this"><a>公告资讯</a>
 				<dl class="layui-nav-child">
 					<!-- 二级菜单 -->
 					<dd>
-						<a href="">最新公告</a>
+						<a th:href="@{/home/noticeList}">最新公告</a>
 					</dd>
 					<dd>
-						<a href="">健康资讯</a>
-					</dd>				
+						<a th:href="@{/home/newsList}">健康资讯</a>
+					</dd>
 				</dl></li>
-			<li class="layui-nav-item"><a href="">留言解答</a></li>
-			<li class="layui-nav-item"><a href="">个人中心</a></li>
+			<li class="layui-nav-item"><a th:href="@{/home/comment}">留言解答</a></li>
+			<li class="layui-nav-item"><a th:href="@{/user/mine}">个人中心</a></li>
 		</ul>
 
 </br></br>

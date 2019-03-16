@@ -635,4 +635,35 @@ public class AdminController {
 	public String adminNoticePreview(){
 		return "admin_notice_preview";
 	}
+
+	/**
+	 * 编辑文章
+	 */
+	@RequestMapping(value = "admin/notice/edit")
+	public  String noticeEdit(){
+		return "admin_notice_edit";
+	}
+	@RequestMapping(value = "admin/editNotice")
+	@ResponseBody
+	public ResultObject editNotice(Notice notice){
+		ResultObject resultObject = new ResultObject();
+		int result = noticeService.updateNotice(notice);
+		return resultObject;
+	}
+	/**
+	 * 删除文章
+	 */
+	@RequestMapping(value = "admin/delNotice")
+	@ResponseBody
+	public ResultObject delNotice(String id){
+		ResultObject resultObject = new ResultObject();
+		int result = noticeService.delNotice(id);
+		if (result<1){
+			resultObject.setCode(-1);
+			resultObject.setMsg("删除失败，请联系管理员");
+			return resultObject;
+		}
+		return resultObject;
+	}
+
 }

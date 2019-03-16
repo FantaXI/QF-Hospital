@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>首页</title>
-<link rel="stylesheet" href="/layui/css/layui.css" type="text/css">
-<script language="JavaScript" src="/js/jquery-3.2.1.js"></script>
-<script src="/layui/layui.js"></script>
-<script>
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}" type="text/css">
+<script language="JavaScript" th:src="@{/js/jquery-3.2.1.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:inline="javascript">
 
 //格式化
 Date.prototype.format = function (fmt) {
@@ -53,8 +53,9 @@ function getformat(date,format){
 $(document).ready(function (){
 	var pageNum = 1;
 	var pageSize = 8;
+	var baseUrl = /*[[@{/home/noticeInfo}]]*/;
     $.ajax({	
-        url : "/home/notice",
+        url : /*[[@{/home/notice}]]*/,
         type : "post",
         data : {'pageNum':pageNum,'pageSize':pageSize,'type':'1'},
         success : function (data){
@@ -65,7 +66,7 @@ $(document).ready(function (){
                 var val = obj[index];
                 var time = getformat(val.createTime,"yyyy-MM-dd");
                 var tr = $('<tr></tr>');
-                tr.append('<td><a href="/home/noticeInfo?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;">' + time + '</td>' );
+                tr.append('<td><a href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;">' + time + '</td>' );
                 tbody.append(tr);
             });
             $('#notice tbody').replaceWith(tbody);
@@ -75,7 +76,7 @@ $(document).ready(function (){
     	}
     });
     $.ajax({	
-        url : "/home/notice",
+        url : /*[[@{/home/notice}]]*/,
         type : "post",
         data : {'pageNum':pageNum,'pageSize':pageSize,'type':'2'},
         success : function (data){
@@ -87,7 +88,7 @@ $(document).ready(function (){
                 var val = obj[index];
                 var time = getformat(val.createTime,"yyyy-MM-dd");
                 var tr = $('<tr></tr>');
-                tr.append('<td><a href="/home/noticeInfo?id=' + val.id + '">'+(index+1)+'、' + val.noticeTitle + '</a></td>' + '<td  style="text-align:right;">' + time + '</td>' );
+                tr.append('<td><a href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、' + val.noticeTitle + '</a></td>' + '<td  style="text-align:right;">' + time + '</td>' );
                 tbody.append(tr);
             });
             $('#news tbody').replaceWith(tbody);
@@ -172,10 +173,10 @@ body {
 		<div class='wrap'>
 			<p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
 			<div style="float: right;">
-			<a style="color: #01AAED"  th:if="${session.user == null}"  href="/login">登录</i> </a>
+			<a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/login}">登录</i> </a>
 			<a style="color: #01AAED" th:if="${session.user != null}" th:text="${session.user.name}+',已登录'">已登录</a>
 			&nbsp;|&nbsp;&nbsp;
-			<a style="color: #01AAED"  th:if="${session.user == null}"  href="register">注册</i> </a>
+			<a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/register}">注册</i> </a>
 			<a style="color: #01AAED" th:if="${session.user != null}" th:href="@{/logout}">注销</a>
 			</div>
 			<div style='clear: both;'></div>
@@ -186,27 +187,26 @@ body {
 
 	<div class="layui-container">
 		<div class="logo">
-			<img alt="" src="/logo1.jpg" style="height: 120px;width: 555px">
+			<img alt="" th:src="@{/logo1.jpg}" style="height: 120px;width: 555px">
 		</div>
 
 		<ul class="layui-nav layui-bg-green" lay-filter="">
 			<li></li>
-			<li class="layui-nav-item  layui-this"><a href="">首页</a></li>
-			<li class="layui-nav-item"><a href="">按科室预约</a></li>
-			<li class="layui-nav-item"><a href="">按疾病预约</a></li>
-			<li class="layui-nav-item"><a href="">公告资讯</a>
+			<li class="layui-nav-item  layui-this"><a th:href="@{/home/main}">首页</a></li>
+			<li class="layui-nav-item"><a th:href="@{/appointment/class/KS}">按科室预约</a></li>
+			<li class="layui-nav-item"><a th:href="@{/appointment/class/JB}">按疾病预约</a></li>
+			<li class="layui-nav-item "><a>公告资讯</a>
 				<dl class="layui-nav-child">
 					<!-- 二级菜单 -->
 					<dd>
-						<a href="noticeList">最新公告</a>
+						<a th:href="@{/home/noticeList}">最新公告</a>
 					</dd>
 					<dd>
-						<a href="newsList">健康资讯</a>
-					</dd>				
+						<a th:href="@{/home/newsList}">健康资讯</a>
+					</dd>
 				</dl></li>
-			<li class="layui-nav-item"><a href="">留言解答</a></li>	
-			<li class="layui-nav-item"><a href="">个人中心</a></li>
-
+			<li class="layui-nav-item"><a th:href="@{/home/comment}">留言解答</a></li>
+			<li class="layui-nav-item"><a th:href="@{/user/mine}">个人中心</a></li>
 		</ul>
 
 
@@ -219,20 +219,20 @@ body {
 			<span>快速预约</span>
 				<form class="layui-form">
 					<div class="layui-form-item ">
-						<div class="layui-input-block">
-						    <input type="text" class="layui-input" id="appointmentDate" >
-							</br>				
-							<select id ="department" name="department" lay-verify="" lay-search>
-								<option value="" selected>请选择科室</option>
+						<div class="div1" style="width:180px;margin: 30px 0 0 50px;">
+							</br>
+							<select id ="departmentClass" name="departmentClass" lay-filter="departmentClass" lay-search>
 							</select>						
 							</br>
-							
-							<select id="doctor" name="doctor" lay-verify="" lay-search>
-								<option value="">请选择医生</option>						
+							<select id ="department" name="department" lay-filter="department"  lay-search>
+								<option>请选择科室</option>
 							</select>
-							
 							</br>
-							<button class="layui-btn layui-btn-warm">前往预约</button>
+							<select id="doctor" name="doctor" lay-filter="doctor" lay-search>
+								<option>请选择医生</option>
+							</select>
+							</br>
+							<a class="layui-btn layui-btn-warm" id="confirm">前往预约</a>
 						</div>
 					</div>
 				</form>
@@ -308,9 +308,13 @@ body {
 			var element = layui.element;
 		});
 	</script>
-	<script>
-		layui.use('carousel', function() {
-			var carousel = layui.carousel;
+	<script th:inline="javascript">
+		layui.use(['form','carousel'], function() {
+            var form = layui.form;
+            var carousel = layui.carousel;
+            layer = parent.layer === undefined ? layui.layer : top.layer,
+                $ = layui.jquery;
+
 			//建造实例
 			carousel.render({
 				elem : '#test1',
@@ -319,23 +323,75 @@ body {
 				arrow : 'always' //始终显示箭头
 			//,anim: 'updown' //切换动画方式
 			});
+
+            //从数据中获取科室大类
+            $.ajax({
+                url: /*[[@{/admin/class/KS}]]*/,
+                dataType: 'json',
+                success: function (result) {
+                    var strs2 = "<option>请选择科室大类</option>";
+                    var workData = result.data;
+                    for(var x in workData){
+                        strs2 += '<option value = "' + workData[x].id + '">' + workData[x].className + '</option>'
+                    }
+                    $("#departmentClass").html(strs2);
+                    form.render('select');
+                }
+            });
+            form.on('select(departmentClass)', function(data){
+                var strs3 = "<option>请选择科室</option>";
+                var classId=$("#departmentClass").val()//获得选中的option的值
+                var context = /*[[@{/}]]*/;
+                var path = context+"admin/listbyclass?classId="+classId;
+                //根据classId获取科室大类下所有科室
+                $.ajax({
+                    url: path,
+                    dataType: 'json',
+                    success: function (result) {
+                        var workData = result.data;
+                        for(var x in workData){
+                            strs3 += '<option value = "' + workData[x].id + '">' + workData[x].departmentName + '</option>'
+                        }
+                        $("#department").html(strs3);
+                        form.render('select');
+                    }
+                });
+            });
+            form.on('select(department)', function(data){
+                var departmentId=$("#department").val();//获得选中的option的值
+                var strs3 = "<option>请选择医生</option>";
+                var path = /*[[@{/}]]*/;
+                //根据classId获取科室大类下所有科室
+                $.ajax({
+                    url: path+'/quickappointment/doctorlist/department/'+departmentId,
+                    dataType: 'json',
+                    success: function (result) {
+                        var workData = result.data;
+                        for(var x in workData){
+                            strs3 += '<option value = "' + workData[x].id + '">' + workData[x].name + '</option>'
+                        }
+                        $("#doctor").html(strs3);
+                        form.render();
+                    }
+                });
+            });
+            form.on('select(doctor)', function(data){
+                var doctorId=$("#doctor").val();
+
+
+                var baseUrl = /*[[@{/appointment/doctor/}]]*/
+                $("#confirm").attr("href",baseUrl+doctorId);
+            });
+
+
+
+
+
+
+
+
 		});
-		<!--加载form模块-->
-		layui.use('form', function() {
-	          var form = layui.form; 
-	          form.render();
-	     });
-		<!--时间选择 -->
-		layui.use('laydate', function(){
-			  var laydate = layui.laydate;			  
-			  //执行一个laydate实例
-			  laydate.render({
-			    elem: '#appointmentDate' //指定元素
-			    ,format: 'yyyy年MM月dd日'
-			    ,min: -0 //7天前
-			    ,max: 7 //7天后
-			  });
-			});
+
 	</script>
 </body>
 </html>

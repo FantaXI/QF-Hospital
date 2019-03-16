@@ -61,4 +61,5 @@ public interface IUserService {
 	public int updateDoctorInfoByUserId(DoctorInfo doctorInfo);
 	public int addDoctorInfo(DoctorInfo doctorInfo);
 	public List<User> queryDoctorByDepartmentIdAndScheduleDate(String departmentId, String scheduleDate);
+	int updatePatientByUserId(PatientInfo patientInfo);
 }

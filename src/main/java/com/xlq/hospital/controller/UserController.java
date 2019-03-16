@@ -31,7 +31,10 @@ import com.xlq.hospital.shiro.MyRealm;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -42,24 +45,6 @@ public class UserController {
 	private AppointmentService appointmentService;
 	@Autowired
 	private MyRealm myRealm;
-	@Value("${ftp.username}")
-	private String userName;
-	@Value("${ftp.password}")
-	private String passWord;
-	@Value("${ftp.address}")
-	private String address;
-	@Value("${ftp.port}")
-	private int port;
-	@Value("${ftp.baseUrl}")
-	private String baseUrl;
-	@Value("${ftp.address}")
-	private String host;
-	@Value("${ftp.basePath}")
-	private String basePath;
-
-
-
-
 
 
 	@RequestMapping("login")
@@ -140,47 +125,47 @@ public class UserController {
 		modelAndView.setViewName("mine");
 		return modelAndView;
 	}
-	@RequestMapping("/user/upload")
-	public String pictureUpload(@RequestParam("pic") MultipartFile uploadFile){
-		DataResp dataResp = new DataResp();
-		try {
-			//1、给上传的图片生成新的文件名
-			//1.1获取原始文件名
-			String oldName = uploadFile.getOriginalFilename();
-			//1.2使用IDUtils工具类生成新的文件名，新文件名 = newName + 文件后缀
-			String newName = IdUtil.getRandomId();
-			newName = newName + oldName.substring(oldName.lastIndexOf("."));
-			//1.3生成文件在服务器端存储的子目录
-			String filePath = "/image";
-
-			//2、把前端输入信息，包括图片的url保存到数据库
-			Subject subject = SecurityUtils.getSubject();
-			Session session = subject.getSession();
-			String userId = (String)session.getAttribute("userId");
-			User user = userService.getUserByUserId(userId);
-			user.setImageUrl(baseUrl + filePath + "/" + newName);
-			// 插入数据库
-			userService.updateUserByuserId(user);
-
-			//3、把图片上传到图片服务器
-			//3.1获取上传的io流
-			InputStream input = uploadFile.getInputStream();
-
-			//3.2调用FtpUtil工具类进行上传
-			boolean result = FtpUtil.uploadFile(host, port, userName, passWord, basePath, filePath, newName, input);
-			if(result) {
-				return "redirect:/user/mine";
-			}else {
-				dataResp.setErrorCode(0);
-				dataResp.setErrorDesc("上传失败！");
-				return "redirect:/user/mine";
-			}
-		} catch (IOException e) {
-			dataResp.setErrorCode(0);
-			dataResp.setErrorDesc("上传失败！");
-			return "redirect:/user/mine";
-		}
-	}
+//	@RequestMapping("/user/upload")
+//	public String pictureUpload(MultipartFile file){
+//		DataResp dataResp = new DataResp();
+//		try {
+//			//1、给上传的图片生成新的文件名
+//			//1.1获取原始文件名
+//			String oldName = file.getOriginalFilename();
+//			//1.2使用IDUtils工具类生成新的文件名，新文件名 = newName + 文件后缀
+//			String newName = IdUtil.getRandomId();
+//			newName = newName + oldName.substring(oldName.lastIndexOf("."));
+//			//1.3生成文件在服务器端存储的子目录
+//			String filePath = "/user";
+//
+//			//2、把前端输入信息，包括图片的url保存到数据库
+//			Subject subject = SecurityUtils.getSubject();
+//			Session session = subject.getSession();
+//			String userId = (String)session.getAttribute("userId");
+//			User user = userService.getUserByUserId(userId);
+//			user.setImageUrl(baseUrl + filePath + "/" + newName);
+//			// 插入数据库
+//			userService.updateUserByuserId(user);
+//
+//			//3、把图片上传到图片服务器
+//			//3.1获取上传的io流
+//			InputStream input = file.getInputStream();
+//
+//			//3.2调用FtpUtil工具类进行上传
+//			boolean result = FtpUtil.uploadFile(host, port, userName, passWord, basePath, filePath, newName, input);
+//			if(result) {
+//				return "redirect:/user/mine";
+//			}else {
+//				dataResp.setErrorCode(0);
+//				dataResp.setErrorDesc("上传失败！");
+//				return "redirect:/user/mine";
+//			}
+//		} catch (IOException e) {
+//			dataResp.setErrorCode(0);
+//			dataResp.setErrorDesc("上传失败！");
+//			return "redirect:/user/mine";
+//		}
+//	}
 	@RequestMapping(value = "doctorlist/department/{departmentId}")
 	public ModelAndView doctorListByDepartmentId(@PathVariable String departmentId ){
 		ModelAndView mv = new ModelAndView();
@@ -193,6 +178,24 @@ public class UserController {
 		mv.setViewName("doctor_list");
 		return mv;
 	}
+	@RequestMapping(value = "/quickappointment/doctorlist/department/{departmentId}")
+	@ResponseBody
+	public ResultObject quickappointmentDoctorListByDepartmentId(@PathVariable String departmentId ){
+		ResultObject resultObject = new ResultObject();
+		List<User> doctorList = userService.queryDoctorByDepartmentId(departmentId);
+
+		List<Map> list = new ArrayList<>();
+		for (User user : doctorList) {
+			Map map = new HashMap();
+			map.put("id",user.getId());
+			map.put("name",user.getName());
+			list.add(map);
+		}
+		resultObject.setData(list);
+		return resultObject;
+	}
+
+
 	@RequestMapping(value = "doctorlist/disease/{diseaseId}",method= RequestMethod.GET)
 	public ModelAndView doctorListByDiseaseId(@PathVariable String diseaseId ){
 		ModelAndView mv = new ModelAndView();
@@ -311,5 +314,58 @@ public class UserController {
 		}
 
 
+	}
+
+	@RequestMapping(value = "user/editInfo")
+	@ResponseBody
+	public ResultObject editUserInfo(PatientInfo patientInfo){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		patientInfo.setUserId(userId);
+		int result = userService.updatePatientByUserId(patientInfo);
+		if(result<1){
+			resultObject.setCode(-1);
+			resultObject.setMsg("更改失败，请联系管理员！");
+			return resultObject;
+		}
+		return resultObject;
+	}
+
+	@RequestMapping(value = "user/psd/edit")
+	public String userPswEdit(){
+		return "user_psw_edit";
+	}
+	@RequestMapping(value = "user/editPsw")
+	@ResponseBody
+	public ResultObject userEditPsw(String oldPassword,String newPassword, String newPassword2){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		User user = userService.getUserByUserId(userId);
+		if(newPassword.length()<6){
+			resultObject.setCode(-1);
+			resultObject.setMsg("密码长度不能少于6位");
+			return resultObject;
+		}else if (!user.getPassword().equals(oldPassword)){
+			resultObject.setCode(-1);
+			resultObject.setMsg("原密码不正确，请重新输入");
+			return resultObject;
+		}else if (user.getPassword().equals(newPassword)){
+			resultObject.setCode(-1);
+			resultObject.setMsg("新密码不能与原密码相同，请重新输入");
+			return resultObject;
+		}else if (!newPassword.equals(newPassword2)){
+			resultObject.setCode(-1);
+			resultObject.setMsg("两次输入的新密码不一致，请重新输入");
+			return resultObject;
+		}
+		User updateUser = new User();
+		updateUser.setId(userId);
+		updateUser.setPassword(newPassword);
+		int result = userService.updateUserByuserId(updateUser);
+		return resultObject;
 	}
 }

@@ -27,4 +27,6 @@ public class UploadFileController {
 		resultObject = ftpService.uploadFileByOperate(file, operate, id);
 		return resultObject;
 	}
+
+
 }

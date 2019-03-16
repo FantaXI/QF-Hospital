@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" type="text/css">
+    <script language="JavaScript" th:src="@{/js/jquery-3.2.1.js}"></script>
+    <script th:src="@{/layui/layui.js}"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        font-family: "微软雅黑"
+    }
+
+    .layui-nav .layui-nav-item {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        vertical-align: middle;
+        line-height: 40px;
+        margin: 0px 40px;
+    }
+
+    .layui-col-md3 span {
+        display: block;
+        background: #f4f6fa;
+        color: #fec009;
+        padding-left: 30px;
+        line-height: 40px;
+        font-size: 18px;
+    }
+
+    .layui-col-md9 p {
+        line-height: 30px;
+        color: #999999;
+    }
+
+    .layui-col-md9 span {
+        display: block;
+        background: #f4f6fa;
+        color: #fec009;
+        padding-left: 30px;
+        line-height: 40px;
+    }
+
+    .layui-col-md9 section {
+        background: #fff;
+    }
+
+    .wrap {
+        width: 1130px;
+        margin: 0px auto;
+    }
+
+    .logo {
+        margin: 10px 0px;
+    }
+
+    .header {
+        line-height: 30px;
+        background: #eeeeee;
+    }
+
+    .footer {
+        background-color: #f6f6f6;
+        text-align: center;
+        padding: 20px 0px;
+    }
+    .span1{
+        float: left;
+        line-height: 30px;
+        height: 30px;
+        color: #888;
+    }
+    .li1{
+        margin: 15px 0;
+        vertical-align: 4px;
+        zoom: 1;
+    }
+    label {
+        font-size: 14px;
+    }
+    .layui-upload-list{
+        margin-left: 108px;
+    }
+    .userInfo{
+        width: 850px;
+        margin: 0 auto;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .new_nr_top{
+        width: 850px;
+        height: 38px;
+        line-height: 38px;
+        background: #eaeef5;
+        margin-top: 20px;
+        margin: 0 auto;
+    }
+    .info_font{
+        padding: 9px 15px;
+        width: 200px;
+        font-weight: 400;
+        line-height: 20px;
+        font-size: 15px;
+        color: #666666;
+    }
+    .input_div{
+        width: 300px;
+    }
+</style>
+<body>
+<div class="header">
+    <div class='wrap'>
+        <p style="float: left">13189457981电话预约欢迎来到雷州市清风医院统一预约门诊平台</p>
+        <div style="float: right;">
+            <a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/login}">登录</i> </a>
+            <a style="color: #01AAED" th:if="${session.user != null}" th:text="${session.user.name}+',已登录'">已登录</a>
+            &nbsp;|&nbsp;&nbsp;
+            <a style="color: #01AAED"  th:if="${session.user == null}"  th:href="@{/register}">注册</i> </a>
+            <a style="color: #01AAED" th:if="${session.user != null}" th:href="@{/logout}">注销</a>
+        </div>
+        <div style='clear: both;'></div>
+    </div>
+</div>
+
+
+<form class="layui-form">
+    <div class="layui-container">
+        <div class="logo">
+            <img alt="" th:src="@{/logo1.jpg}" style="height: 120px;width: 555px">
+        </div>
+
+        <ul class="layui-nav layui-bg-green" lay-filter="">
+            <li></li>
+            <li class="layui-nav-item"><a th:href="@{/home/main}">首页</a></li>
+            <li class="layui-nav-item"><a th:href="@{/appointment/class/KS}">按科室预约</a></li>
+            <li class="layui-nav-item"><a th:href="@{/appointment/class/JB}">按疾病预约</a></li>
+            <li class="layui-nav-item "><a>公告资讯</a>
+                <dl class="layui-nav-child">
+                    <!-- 二级菜单 -->
+                    <dd>
+                        <a th:href="@{/home/noticeList}">最新公告</a>
+                    </dd>
+                    <dd>
+                        <a th:href="@{/home/newsList}">健康资讯</a>
+                    </dd>
+                </dl></li>
+            <li class="layui-nav-item"><a th:href="@{/home/comment}">留言解答</a></li>
+            <li class="layui-nav-item layui-this"><a th:href="@{/user/mine}">个人中心</a></li>
+        </ul>
+
+
+        </br></br>
+
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md2">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation"><a th:href="@{/user/mine}">个人信息</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/user/psd/edit}">修改密码</a></li>
+                    <li role="presentation"><a th:href="@{/user/order/list}">预约管理</a></li>
+                    <li role="presentation"><a th:href="@{/home/myComment}">我的留言</a></li>
+                </ul>
+            </div>
+            <div class="layui-col-md8 userInfo">
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <div class="new_nr_top">修改密码</div>
+                </div>
+                <div class="input_div">
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <label class="layui-form-label">原密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" class="layui-input oldPassword" lay-verify="pass">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <label class="layui-form-label">新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" class="layui-input newPassword" lay-verify="pass">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <label class="layui-form-label">确认新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" class="layui-input newPassword2" lay-verify="pass">
+                    </div>
+                </div>
+                    <div class="layui-form-item layui-row layui-col-xs12">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="edit">确认更改</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</form>
+
+<div class="footer">
+    <p>清风医院预约门诊统一平台</p>
+    <p>技术支持：XLQ</p>
+</div>
+<script th:inline="javascript">
+    layui.use(['element','form'], function() {
+        var element = layui.element;
+        var form = layui.form;
+
+        form.on("submit(edit)",function(data){
+            $.post(/*[[@{/user/editPsw}]]*/,{
+                oldPassword : $(".oldPassword").val(),
+                newPassword : $(".newPassword").val(),
+                newPassword2 : $(".newPassword2").val(),
+                sex : data.field.sex,  //性别
+            },function(res){
+                if (res.code<0){
+                    layer.msg(res.msg);
+                }else {
+                    layer.msg("密码更改成功，请牢记",{time:1000},function () {
+                        window.location.reload();
+                    });
+                }
+            })
+
+
+            return false;
+        })
+
+    });
+</script>
+
+</body>
+</html>

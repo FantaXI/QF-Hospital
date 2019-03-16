@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xlq.hospital.common.ResultObject;
 import com.xlq.hospital.model.Notice;
+import com.xlq.hospital.model.PatientInfo;
 
 public interface INoticeService {
 	/**
@@ -23,7 +24,13 @@ public interface INoticeService {
 	 */
 	Notice getNoticeById(String id);
 
-	public ResultObject queryNoticeByKey(int page, int limit, Notice notice);
+	ResultObject queryNoticeByKey(int page, int limit, Notice notice);
 
-	public ResultObject addNotice(Notice notice);
+	ResultObject addNotice(Notice notice);
+
+	int updateNotice(Notice notice);
+
+	int delNotice(String id);
+
+
 }

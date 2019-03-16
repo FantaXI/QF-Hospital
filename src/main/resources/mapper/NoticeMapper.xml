@@ -23,9 +23,6 @@
   <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.Notice" >
     update h_notice
     set notice_title = #{noticeTitle,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
-      state = #{state,jdbcType=VARCHAR},
       notice_content = #{noticeContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>

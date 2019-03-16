@@ -8,6 +8,9 @@ import com.xlq.hospital.model.Department;
 import com.xlq.hospital.model.Disease;
 import com.xlq.hospital.model.User;
 import com.xlq.hospital.service.IUserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,7 +57,17 @@ public class FtpService {
 			//1.3生成文件在服务器端存储的子目录
 			//测试文件夹
 			String filePath = "/test";
-			if ("user".equals(operate)){
+			if("editByUser".equals(operate)){
+				//用户更改头像
+				filePath = "/user";
+				Subject subject = SecurityUtils.getSubject();
+				Session session = subject.getSession();
+				String userId = (String)session.getAttribute("userId");
+				User user = userService.getUserByUserId(userId);
+				user.setImageUrl(baseUrl + filePath + "/" + newName);
+				// 插入数据库
+				userService.updateUserByuserId(user);
+			} else if ("user".equals(operate)){
 				filePath = "/user";
 				if(!StringUtils.isEmpty(id)){
 					User user = new User();
@@ -104,4 +117,6 @@ public class FtpService {
 		}
 		return resultObject;
 	}
+
+
 }

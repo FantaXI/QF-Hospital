@@ -80,4 +80,26 @@
     from h_patient_info
     where id_card = #{idCard,jdbcType=VARCHAR}
   </select>
+
+  <update id="updatePatientByUserId" parameterType="com.xlq.hospital.model.PatientInfo" >
+    update h_patient_info
+    <set>
+      <if test="address!=null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="bornData!=null">
+        born_data = #{bornData,jdbcType=DATE},
+      </if>
+      <if test="age!=null">
+        age = #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard!=null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sex!=null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
 </mapper>

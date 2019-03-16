@@ -43,7 +43,7 @@
     <!--操作-->
     <script type="text/html" id="userListBar">
         <a class="layui-btn layui-btn-xs" lay-event="preview">预览</a>
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="del">删除</a>
     </script>
 </form>
@@ -163,16 +163,15 @@
         //修改用户
         function editNotice(edit){
             var index = layui.layer.open({
-                title : "编辑疾病",
+                title : "编辑文章",
                 type : 2,
                 content : /*[[@{/admin/notice/edit}]]*/,
                 success : function(layero, index){
                     var body = layui.layer.getChildFrame('body', index);
                     if(edit){
-                        body.find(".id").val(edit.id);
-                        body.find(".noticeContent").val(edit.noticeContent);
+                        body.find(".noticeId").val(edit.id);
+                        body.find(".noticeContentTemp").text(edit.noticeContent);
                         body.find(".noticeTitle").val(edit.noticeTitle);
-                        body.find(".state").val(edit.diseaseDesc);
                         form.render();
                     }
                     setTimeout(function(){

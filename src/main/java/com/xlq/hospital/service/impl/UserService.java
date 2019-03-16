@@ -150,4 +150,9 @@ public class UserService implements IUserService{
 	public List<User> queryDoctorByDepartmentIdAndScheduleDate(String departmentId, String scheduleDate){
 		return userDao.queryDoctorByDepartmentIdAndScheduleDate(departmentId,scheduleDate);
 	}
+
+	@Override
+	public int updatePatientByUserId(PatientInfo patientInfo) {
+		return patientInfoDao.updatePatientByUserId(patientInfo);
+	}
 }
