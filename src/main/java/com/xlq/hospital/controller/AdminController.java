@@ -1,7 +1,6 @@
 package com.xlq.hospital.controller;
 
 
-import com.sun.deploy.panel.ITreeNode;
 import com.xlq.hospital.common.IdUtil;
 import com.xlq.hospital.common.ResultObject;
 import com.xlq.hospital.model.*;
@@ -10,6 +9,9 @@ import com.xlq.hospital.service.INoticeService;
 import com.xlq.hospital.service.IUserService;
 import com.xlq.hospital.service.impl.AppointmentService;
 import com.xlq.hospital.service.impl.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -665,5 +667,26 @@ public class AdminController {
 		}
 		return resultObject;
 	}
+
+	/**
+	 * 订单列表
+	 */
+	@RequestMapping(value = "admin/order/list")
+	public String adminOrderList(){
+		return "admin_order_list";
+	}
+	@RequestMapping(value = "admin/getOrderList")
+	@ResponseBody
+	public ResultObject doctorListOrder(int page, int limit,
+	                                    Order searchOrder,
+	                                    @RequestParam(required = false) String appointmentTimeBegin,
+	                                    @RequestParam(required = false) String appointmentTimeEnd){
+		ResultObject resultObject = new ResultObject();
+		searchOrder.setAppointmentTimeBegin(appointmentTimeBegin);
+		searchOrder.setAppointmentTimeEnd(appointmentTimeEnd);
+		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
+		return  resultObject;
+	}
+
 
 }

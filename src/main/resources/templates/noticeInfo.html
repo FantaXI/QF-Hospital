@@ -202,8 +202,8 @@ body {
 </br></br>
 		<div class="tz_notice_nr">
 			<div class="tz_nr_top">
-				<span class="state" th:if="${noticeInfo.state} =='1'">新闻</span>
-				<span class="state" th:if="${noticeInfo.state} == '2'">公告</span>
+				<span class="state" th:if="${noticeInfo.state} =='1'">最新公告</span>
+				<span class="state" th:if="${noticeInfo.state} == '2'">健康咨询</span>
 				<span class="createTime" th:text="${#dates.format(noticeInfo.createTime, 'yyyy年MM月dd日')}"></span>
 			</div>
 

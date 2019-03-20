@@ -19,7 +19,22 @@
             <div class="layui-inline">
                 <input type="text" id="appointmentTimeBegin" class="" style="height: 38px; " placeholder="起始日期" />
                 <input type="text" id="appointmentTimeEnd" class=" " style="height: 38px;" placeholder="结束日期" />
+                <div class="layui-input-inline" style="width:180px">
+                    <select id ="departmentClass" name="departmentClass" lay-filter="departmentClass" lay-search>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width:180px">
+                    <select id ="department" name="department" lay-filter="department"  lay-search>
+                        <option value=''>请选择科室</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width:180px">
+                    <select id="doctor" name="doctor" lay-filter="doctor" lay-search>
+                        <option value=''>请选择医生</option>
+                    </select>
+                </div>
             </div>
+
             <br>
             <div class="layui-inline">
                 <div class="layui-input-inline" style="width:180px">
@@ -33,7 +48,19 @@
                     </select>
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input searchVal" style="width: 180px" placeholder="输入患者/医生信息搜索" />
+                    <input type="text" class="layui-input patientName" style="width: 180px" placeholder="输入患者姓名搜索" />
+                </div>
+                <div class="layui-input-inline" >
+                    <input type="text" class="layui-input patientMobile" style="width: 180px" placeholder="输入患者电话搜索" />
+                </div>
+                <div class="layui-input-inline" >
+                    <input type="text" class="layui-input patientIdCard" style="width: 180px" placeholder="输入患者身份证号搜索" />
+                </div>
+                <div class="layui-input-inline" >
+                    <input type="text" class="layui-input doctorName" style="width: 180px" placeholder="输入医生姓名搜索" />
+                </div>
+                <div class="layui-input-inline" >
+                    <input type="text" class="layui-input doctorMobile" style="width: 180px" placeholder="输入医生电话搜索" />
                 </div>
             </div>
             <a class="layui-btn search_btn" data-type="reload">搜索</a>
@@ -121,7 +148,7 @@
         //列表
         var tableIns = table.render({
             elem: '#orderList',
-            url: /*[[@{/doctor/getOrderList}]]*/,
+            url: /*[[@{/admin/getOrderList}]]*/,
             cellMinWidth: 95,
             page: true,
             height: "full-125",
@@ -139,7 +166,13 @@
                     curr: 1 //重新从第 1 页开始
                 },
                 where: {
-                    key: $(".searchVal").val(),
+                    departmentId:$("#department").val(),
+                    doctorId:$("#doctor").val(),
+                    doctorName:$(".doctorName").val(),
+                    doctorMobile:$(".doctorMobile").val(),
+                    patientName:$(".patientName").val(),
+                    patientMobile:$(".patientMobile").val(),
+                    patientIdCard:$(".patientIdCard").val(),
                     status: $("#status").val(),
                     appointmentTimeBegin: $("#appointmentTimeBegin").val(),
                     appointmentTimeEnd: $("#appointmentTimeEnd").val(),
@@ -147,37 +180,63 @@
             })
 
         });
-        function addOrder(){
-            var index = layui.layer.open({
-                title : "添加",
-                type : 2,
-                content : /*[[@{/doctor/order/add}]]*/,
-                success : function(layero, index){
-                    var body = layui.layer.getChildFrame('body', index);
-                    setTimeout(function(){
-                        layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
-                            tips: 3
-                        });
-                    },500)
+        //从数据中获取科室大类
+        $.ajax({
+            url: /*[[@{/admin/class/KS}]]*/,
+            dataType: 'json',
+            success: function (result) {
+                var strs2 = "<option value=''>请选择科室大类</option>";
+                var workData = result.data;
+                for(var x in workData){
+                    strs2 += '<option value = "' + workData[x].id + '">' + workData[x].className + '</option>'
                 }
-            })
-            layui.layer.full(index);
-            window.sessionStorage.setItem("index",index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize",function(){
-                layui.layer.full(window.sessionStorage.getItem("index"));
-            })
-        }
-
-        $(".addNews_btn").click(function(){
-            addOrder();
-        })
+                $("#departmentClass").html(strs2);
+                form.render('select');
+            }
+        });
+        form.on('select(departmentClass)', function(data){
+            var strs3 = "<option value=''>请选择科室</option>";
+            var classId=$("#departmentClass").val()//获得选中的option的值
+            var context = /*[[@{/}]]*/;
+            var path = context+"admin/listbyclass?classId="+classId;
+            //根据classId获取科室大类下所有科室
+            $.ajax({
+                url: path,
+                dataType: 'json',
+                success: function (result) {
+                    var workData = result.data;
+                    for(var x in workData){
+                        strs3 += '<option value = "' + workData[x].id + '">' + workData[x].departmentName + '</option>'
+                    }
+                    $("#department").html(strs3);
+                    form.render('select');
+                }
+            });
+        });
+        form.on('select(department)', function(data){
+            var departmentId=$("#department").val();//获得选中的option的值
+            var strs3 = "<option value=''>请选择医生</option>";
+            var path = /*[[@{/}]]*/;
+            //根据classId获取科室大类下所有科室
+            $.ajax({
+                url: path+'/quickappointment/doctorlist/department/'+departmentId,
+                dataType: 'json',
+                success: function (result) {
+                    var workData = result.data;
+                    for(var x in workData){
+                        strs3 += '<option value = "' + workData[x].id + '">' + workData[x].name + '</option>'
+                    }
+                    $("#doctor").html(strs3);
+                    form.render();
+                }
+            });
+        });
         //修改
         function editOrder(edit){
             var index = layui.layer.open({
                 title : "编辑",
                 type : 2,
-                content : /*[[@{/doctor/order/edit}]]*/,
+                content : /*[[@{/admin/order/edit}]]*/,
                 success : function(layero, index){
                     var body = layui.layer.getChildFrame('body', index);
                     if(edit){

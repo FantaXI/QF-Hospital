@@ -234,4 +234,8 @@ public class AppointmentService {
 	public int updateOrder(Order order){
 		return orderDao.updateByPrimaryKey(order);
 	}
+
+	public Order queryOrderById(String id){
+		return orderDao.selectByPrimaryKey(id);
+	}
 }

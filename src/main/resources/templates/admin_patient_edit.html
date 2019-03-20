@@ -98,7 +98,7 @@
         upload.render({
             elem: '#selectPic',
             //url: /*[[@{/ftp/uploadPic}]]*/ ,
-            url: '/ftp/uploadPic',
+            url: /*[[@{/ftp/uploadPic}]]*/,
             auto: false,
             data: {operate:'user', id: $(".userId").val()},
             bindAction: '#uploadPic',

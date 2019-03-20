@@ -18,9 +18,13 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<!-- set thymeleaf version -->
+		<!--<thymeleaf.version>3.0.0.RELEASE</thymeleaf.version>
+		<thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>-->
 	</properties>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -94,10 +98,10 @@
 			<version>3.3</version>
 		</dependency>
 		<!--UEditor依赖的jar包 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>

@@ -1,14 +1,10 @@
 package com.xlq.hospital.controller;
 
-import javax.naming.AuthenticationException;
-
-import com.xlq.hospital.common.FtpUtil;
 import com.xlq.hospital.common.IdUtil;
 import com.xlq.hospital.common.ResultObject;
-import com.xlq.hospital.model.Department;
-import com.xlq.hospital.model.Disease;
-import com.xlq.hospital.model.PatientInfo;
+import com.xlq.hospital.model.*;
 import com.xlq.hospital.service.impl.AppointmentService;
+import com.xlq.hospital.service.impl.CollectionService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -18,19 +14,15 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.xlq.hospital.common.DataResp;
-import com.xlq.hospital.model.User;
 import com.xlq.hospital.service.IUserService;
 import com.xlq.hospital.shiro.MyRealm;
+import org.thymeleaf.util.ListUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +37,8 @@ public class UserController {
 	private AppointmentService appointmentService;
 	@Autowired
 	private MyRealm myRealm;
+	@Autowired
+	private CollectionService collectionService;
 
 
 	@RequestMapping("login")
@@ -366,6 +360,98 @@ public class UserController {
 		updateUser.setId(userId);
 		updateUser.setPassword(newPassword);
 		int result = userService.updateUserByuserId(updateUser);
+		return resultObject;
+	}
+
+	@RequestMapping(value = "user/order/list")
+	public String userOrderList(){
+		return "user_order_list";
+	}
+	@RequestMapping(value = "user/order/edit/{id}")
+	public ModelAndView userOrderEdit(@PathVariable String id){
+		ModelAndView mv = new ModelAndView();
+		Order order = appointmentService.queryOrderById(id);
+		mv.addObject("order",order);
+		mv.setViewName("user_order_edit");
+		return mv;
+	}
+	@RequestMapping(value = "user/getOrderList")
+	@ResponseBody
+	public ResultObject userListOrder(int page, int limit,
+	                                    @RequestParam(required = false) String key,
+	                                    @RequestParam(required = false) String status,
+	                                    @RequestParam(required = false) String appointmentTimeBegin,
+	                                    @RequestParam(required = false) String appointmentTimeEnd){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		Order searchOrder = new Order();
+		searchOrder.setKey(key);
+		searchOrder.setStatus(status);
+		searchOrder.setAppointmentTimeBegin(appointmentTimeBegin);
+		searchOrder.setAppointmentTimeEnd(appointmentTimeEnd);
+		searchOrder.setPatientId(userId);
+		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
+		return  resultObject;
+
+	}
+
+	/**
+	 * 收藏医生
+	 */
+	@RequestMapping(value = "user/collection/add")
+	@ResponseBody
+	public ResultObject userCollectionAdd(MyCollection myCollection){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		if (userId==null){
+			resultObject.setCode(-1);
+			resultObject.setMsg("尚未登录，请登录后再进行收藏");
+			return resultObject;
+		}
+		myCollection.setPatientId(userId);
+		//查看是否已收藏
+		resultObject = collectionService.queryCollection(0,9999,myCollection);
+		if(!ListUtils.isEmpty((List)resultObject.getData())){
+			resultObject.setCode(-1);
+			resultObject.setMsg("您已收藏该医生，无需重复收藏");
+			return resultObject;
+		}
+		myCollection.setId(IdUtil.getRandomId());
+		int result = collectionService.addCollection(myCollection);
+		resultObject.setMsg("收藏成功！");
+		return resultObject;
+	}
+	/**
+	 * 收藏列表
+	 */
+	@RequestMapping(value = "user/collection/list")
+	public String userCollectionList(){
+		return "user_collection_list";
+	}
+	@RequestMapping(value = "user/getColletionList")
+	@ResponseBody
+	public ResultObject userGetCollectionList(int page, int limit){
+		ResultObject resultObject = new ResultObject();
+		Subject subject = SecurityUtils.getSubject();
+		Session session = subject.getSession();
+		String userId = (String)session.getAttribute("userId");
+		MyCollection collection = new MyCollection();
+		collection.setPatientId(userId);
+		resultObject = collectionService.queryCollection(page,limit,collection);
+		return  resultObject;
+	}
+	/**
+	 * 取消收藏
+	 */
+	@RequestMapping(value = "user/collection/del")
+	@ResponseBody
+	public ResultObject userCollectionDel(String id){
+		ResultObject resultObject = new ResultObject();
+		int result = collectionService.delCollection(id);
 		return resultObject;
 	}
 }

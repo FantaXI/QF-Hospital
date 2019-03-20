@@ -66,7 +66,7 @@ $(document).ready(function (){
                 var val = obj[index];
                 var time = getformat(val.createTime,"yyyy-MM-dd");
                 var tr = $('<tr></tr>');
-                tr.append('<td><a href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;">' + time + '</td>' );
+                tr.append('<td><a target="_blank" href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;">' + time + '</td>' );
                 tbody.append(tr);
             });
             $('#notice tbody').replaceWith(tbody);
@@ -88,7 +88,7 @@ $(document).ready(function (){
                 var val = obj[index];
                 var time = getformat(val.createTime,"yyyy-MM-dd");
                 var tr = $('<tr></tr>');
-                tr.append('<td><a href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、' + val.noticeTitle + '</a></td>' + '<td  style="text-align:right;">' + time + '</td>' );
+                tr.append('<td><a target="_blank" href="'+baseUrl+'?id=' + val.id + '">'+(index+1)+'、' + val.noticeTitle + '</a></td>' + '<td  style="text-align:right;">' + time + '</td>' );
                 tbody.append(tr);
             });
             $('#news tbody').replaceWith(tbody);
@@ -166,6 +166,10 @@ body {
 
 .notice {}
 .news{}
+	.description{
+		margin: 20px;
+		font-size: 15px;
+	}
 </style>
 
 <body>
@@ -242,11 +246,9 @@ body {
 			<div class="layui-col-md6">
 				<div class="layui-carousel" id="test1">
 					<div carousel-item>
-						<div>条目1</div>
-						<div>条目2</div>
-						<div>条目3</div>
-						<div>条目4</div>
-						<div>条目5</div>
+						<a th:href="@{/home/noticeInfo?id=57f2bbaaa7b5}" target="_blank"><div><img th:src="@{/images/broadcast1.jpg}" style="width: 565px;height: 280px"></div></a>
+						<a th:href="@{/home/noticeInfo?id=57f2bbaaa7b5}" target="_blank"><div><img th:src="@{/images/broadcast2.jpg}" style="width: 565px;height: 280px"></div></a>
+						<a th:href="@{/home/noticeInfo?id=57f2bbaaa7b5}" target="_blank"><div><img th:src="@{/images/broadcast3.jpg}" style="width: 565px;height: 280px"></div></a>
 					</div>
 				</div>
 			</div>
@@ -254,6 +256,10 @@ body {
 				<section>
 					<span>医院简介</span>
 				</section>
+				<div class="description">
+					<img th:src="@{/images/hospital.png}" style="width: 110px;height: 110px;margin-left: 65px;">
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;清风医院是集医疗、教学、科研于一体的大型三级甲等综合医院，以综合实力雄厚，医疗质量过硬，学科特色鲜明享誉海内外；同时也是广东省医疗、教学、科研指导中心。</p>
+				</div>
 			</div>
 		</div>
 
@@ -273,6 +279,11 @@ body {
 				<section style="background: red">
 					<span style="font-size: 18px;">联系方式、地址</span>
 				</section>
+				<div class="description">
+				<p>地址：广东省湛江市雷州市XX号</p><br>
+				<p>邮编：524200</p><br>
+				<p>联系电话：12345678912</p>
+				</div>
 			</div>
 		</div>
 		<div class="layui-row layui-col-space10">
@@ -290,6 +301,11 @@ body {
 				<section style="background: red">
 					<span style="font-size: 18px;">著名医生</span>
 				</section>
+				<div class="description">
+					<img th:src="@{/images/face.jpg}" style="width: 110px;height: 110px;margin-left: 65px;">
+					<h3>周杰伦</h3>
+					<p> 1985年毕业于原浙江医科大学，1990年获硕士学位。主任医师，博士生导师。现任中国卫生信息学会健康医疗大数据医疗质量管理专业委员副主任委员.</p>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -77,9 +77,11 @@
   </select>
   
   <select id="getDoctorInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select id, user_id, department_id, department_name, doctor_desc, expert_desc, professional_title, 
-    score, appointment_count, create_time, last_update_time, col1, col2, col3, col4
-    from h_doctor_info
+    select hdi.id, user_id, department_id, hd.department_name, doctor_desc, expert_desc, professional_title,
+    score, appointment_count, hdi.create_time, hdi.last_update_time, col1, col2, col3, col4
+    from h_doctor_info hdi
+		left join h_department hd
+		on hdi.department_id = hd.id
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
 </mapper>

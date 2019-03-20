@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>个人中心</title>
@@ -102,10 +105,10 @@
         margin-top: 20px;
         margin: 0 auto;
     }
-    .orderInfo{
-        height: 600px;
+    .layui-table-cell {
+        height: auto;
+        line-height: 50px;
     }
-
 </style>
 <body>
 <div class="header">
@@ -156,53 +159,32 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li role="presentation"><a th:href="@{/user/mine}">个人信息</a></li>
                     <li role="presentation"><a th:href="@{/user/psd/edit}">修改密码</a></li>
-                    <li role="presentation"  class="active"><a th:href="@{/user/order/list}">预约管理</a></li>
+                    <li role="presentation"><a th:href="@{/user/order/list}">预约管理</a></li>
+                    <li role="presentation" class="active"><a th:href="@{/user/collection/list}">我的收藏</a></li>
                     <li role="presentation"><a th:href="@{/home/myComment}">我的留言</a></li>
                 </ul>
             </div>
             <div class="layui-col-md8 userInfo">
                 <div class="layui-form-item layui-row layui-col-xs12">
-                    <div class="new_nr_top">我的预约订单</div>
+                    <div class="new_nr_top">我的收藏</div>
                 </div>
-                <div class="orderInfo">
-                    <form class="layui-form">
-                        <div class="layui-inline">
-                            <input type="text" id="appointmentTimeBegin" class="" style="height: 38px; " placeholder="起始日期" />
-                            <input type="text" id="appointmentTimeEnd" class=" " style="height: 38px;" placeholder="结束日期" />
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline" style="width:180px">
-                                <select id="status" name="status" style="width: 180px" lay-verify="">
-                                    <option value="">选择订单状态</option>
-                                    <option value="DZZ">待诊治</option>
-                                    <option value="DPJ">待评价</option>
-                                    <option value="YWC">已完成</option>
-                                    <option value="YHQX">用户取消</option>
-                                    <option value="YHSY">用户爽约</option>
-                                </select>
-                            </div>
-                        </div>
-                        <a class="layui-btn search_btn" data-type="reload">搜索</a>
-                        <!--div class="layui-inline">
-                            <a class="layui-btn layui-btn-danger layui-btn-normal delAll_btn">批量删除</a>
-                        </div-->
-                        <table id="orderList" class="layui-table" lay-filter="orderList"></table>
 
-                        <!--操作-->
-                        <script type="text/html" id="userListBar">
-                            <a class="layui-btn layui-btn-xs" lay-event="edit">查看/处理</a>
-                        </script>
+                <table id="collectionList" class="layui-table" lay-filter="collectionList"></table>
 
-                    </form>
+                <!--操作-->
+                <script type="text/html" id="userListBar">
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">取消收藏</a>
+                </script>
 
-                </div>
 
             </div>
-        </div>
 
+        </div>
 
     </div>
 </form>
+
+
 
 <div class="footer">
     <p>清风医院预约门诊统一平台</p>
@@ -250,42 +232,29 @@
         return dateformat;
     }
     var doctorUrl = /*[[@{/appointment/doctor/}]]*/;
-    var departmentUrl = /*[[@{/doctorlist/department/}]]*/;
     var col = [
-        {field: 'appointmentTime', title: '预约日期', minWidth:120, align:'center',templet:function(d){return getformat(d.appointmentTime,"yyyy/MM/dd")}},
-        {field: 'departmentName', title: '科室', minWidth:120, align:'center',
-            templet:function(d){
-                return '<a class="layui-blue" href="'+departmentUrl+d.departmentId+'" target="_blank">'+d.departmentName+'</a>';}},
+        {field: 'imageUrl', title: '头像', minWidth:120, align:'center',templet:function(d){
+            return '<img src="'+d.imageUrl+'" style="height: 50px">'}},
         {field: 'doctorName', title: '医生', minWidth:120, align:'center',templet:function(d){
                 return '<a class="layui-blue" href="'+doctorUrl+d.doctorId+'" target="_blank">'+d.doctorName+'</a>';}},
-        {field: 'doctorMobile', title: '医生电话', minWidth:140, align:'center'},
-        {field: '', title: '预约费用', minWidth:100, align:'center',templet:function(d){return d.appointmentFee+"元"}},
-        {field: 'statusDesc', title: '订单状态', minWidth:100, align:'center'},
+        {field: 'departmentName', title: '科室', minWidth:120, align:'center'},
+        {field: '', title: '加入收藏时间', minWidth:100, align:'center',templet:function(d){return getformat(d.createTime,"yyyy/MM/dd")}},
         {title: '操作', minWidth:120, templet:'#userListBar',fixed:"right",align:"center"}];
-
-
-    layui.use(['form','layer','table','laytpl','laydate'],function() {
-        var form = layui.form,
-            laydate = layui.laydate,
-            layer = parent.layer === undefined ? layui.layer : top.layer,
-            $ = layui.jquery,
-            laytpl = layui.laytpl,
-            table = layui.table;
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#appointmentTimeBegin' //指定元素
-        });
-        laydate.render({
-            elem: '#appointmentTimeEnd' //指定元素
-        });
+    layui.use(['form','element','layer','table','laytpl'], function() {
+        var element = layui.element,
+         form = layui.form,
+        laytpl = layui.laytpl,
+            table = layui.table,
+        layer = parent.layer === undefined ? layui.layer : top.layer,laydate = layui.laydate
+        $ = layui.jquery;
 
         //列表
         var tableIns = table.render({
-            elem: '#orderList',
-            url: /*[[@{/user/getOrderList}]]*/,
+            elem: '#collectionList',
+            url: /*[[@{/user/getColletionList}]]*/,
             cellMinWidth: 95,
             page: true,
-            height: "500",
+            height: "full-125",
             limits: [10, 15, 20, 25],
             limit: 10,
             id: "newOrderListTable",
@@ -293,46 +262,29 @@
             skin:'nob',
             style:'font-size:10px;'
         });
-        //搜索
-        $(".search_btn").on("click", function () {
-
-            table.reload("newOrderListTable", {
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                },
-                where: {
-                    status: $("#status").val(),
-                    appointmentTimeBegin: $("#appointmentTimeBegin").val(),
-                    appointmentTimeEnd: $("#appointmentTimeEnd").val(),
-                }
-            })
-
-        });
 
         //列表操作
-        table.on('tool(orderList)', function(obj){
+        table.on('tool(collectionList)', function(obj){
             var layEvent = obj.event,
                 data = obj.data;
 
-            if(layEvent === 'edit'){ //编辑
-                var Url = /*[[@{/user/order/edit/}]]*/;
-                layer.open({
-                    title: '订单详情',
-                    type: 2,
-                    content: Url+data.id,
-                    btn: ['关闭'],
-                    area: ['1000px', '600px'],
-                    offset: '50px',
+            if(layEvent === 'del'){ //删除
+                layer.confirm('确定取消收藏？',{icon:3, title:'提示信息'},function(index){
+                    $.get(/*[[@{/user/collection/del}]]*/,{
+                        id : data.id ,  //将Id作为参数传入
+                    },function(data){
+                        if (data.code < 0){
+                            top.layer.msg(data.msg);
+                        }
+                        tableIns.reload();
+                        layer.close(index);
+                    })
                 });
-
             }
-
         });
 
 
     });
 </script>
-
-
 </body>
 </html>

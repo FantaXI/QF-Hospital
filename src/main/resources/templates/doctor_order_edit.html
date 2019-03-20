@@ -85,6 +85,26 @@
         </div>
     </div>
 
+    <div id="result_div">
+        <div class="layui-form-item layui-row layui-col-xs12" id="select_status_div">
+            <label class="layui-form-label">结束状态</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline" style="width:180px">
+                    <select id="status" name="status" style="width: 180px" lay-verify="required" >
+                        <option value="">选择处理结果</option>
+                        <option value="DPJ">诊治完成</option>
+                        <option value="YHSY">用户爽约</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-row layui-col-xs12">
+            <label class="layui-form-label">结果描述</label>
+            <div class="layui-input-block">
+                <textarea  class="layui-textarea resultDesc"  lay-verify="required" placeholder="请输入描述" readonly></textarea>
+            </div>
+        </div>
+    </div>
     <div id="evaluate_div">
         <div class="layui-form-item layui-row layui-col-xs12">
             <label class="layui-form-label">评分</label>
@@ -99,25 +119,6 @@
         </div>
     </div>
 
-    <div id="result_div">
-        <div class="layui-form-item layui-row layui-col-xs12">
-            <label class="layui-form-label">结束状态</label>
-            <div class="layui-input-block">
-                <div class="layui-input-inline" style="width:180px">
-                    <select id="status" name="status" style="width: 180px" lay-verify="required" >
-                        <option value="">选择处理结果</option>
-                        <option value="YZZ">已诊治</option>
-                        <option value="YHSY">用户爽约</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item layui-row layui-col-xs12">
-            <label class="layui-form-label">结果描述</label>
-            <div class="layui-input-block">
-                <textarea  class="layui-textarea resultDesc"  lay-verify="required" placeholder="请输入描述" readonly></textarea>
-            </div>
-        </div>
         <input type="hidden" class="layui-input score" >
         <input type="hidden" class="layui-input status" >
         <div id="button_div">
@@ -145,8 +146,18 @@
             //渲染打分
             var ins1 = rate.render({
                 elem: '#score', //绑定元素
-                value: $(".score").val(),
+                value: $(".score").val()/2,
                 readonly:true,
+                setText: function(value){
+                    var arrs = {
+                        '1': '非常不满意'
+                        ,'2': '不满意'
+                        ,'3': '一般'
+                        ,'4': '满意'
+                        ,'5': '非常满意'
+                    };
+                    this.span.text(arrs[value] || ('请选择满意度'));
+                },
             });
 
             function display(){
@@ -156,8 +167,10 @@
                 } else if ($(".status").val()=='YHQX' ||$(".status").val()=='DPJ'||$(".status").val()=='YHSY'){
                     $("#evaluate_div").hide();
                     $("#button_div").hide();
+                    $("#select_status_div").hide();
                 }else if ($(".status").val()=='YWC') {
                     $("#button_div").hide();
+                    $("#select_status_div").hide();
                 }
             }
             display();
@@ -165,18 +178,23 @@
 
             form.on("submit(editOrder)",function(data){
                 //弹出loading
+                var status = $("#status").val();
+                var statusDesc = $("#status option:selected").text();
+                if (status=='DPJ'){
+                    statusDesc = '待评价';
+                }
                 var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
-                $.post(/*[[@{/doctor/editOrder}]]*/,{
+                $.post(/*[[@{/user/order/edit}]]*/,{
                     id : $(".orderId").val(),
                     resultDesc :$(".resultDesc").val(),
-                    status: $("#status").val(),
-                    statusDesc: $("#status option:selected").text(),
+                    status: status,
+                    statusDesc: statusDesc,
                 },function(res){
                     if (res.code<0){
                         top.layer.msg(res.msg);
                     }else {
                         top.layer.close(index);
-                        top.layer.msg("用户编辑成功！");
+                        top.layer.msg("处理成功！");
                         layer.closeAll("iframe");
                         //刷新父页面
                         parent.location.reload();
@@ -186,14 +204,6 @@
                 return false;
             })
 
-            //格式化时间
-            function filterTime(val){
-                if(val < 10){
-                    return "0" + val;
-                }else{
-                    return val;
-                }
-            }
 
         })
     }

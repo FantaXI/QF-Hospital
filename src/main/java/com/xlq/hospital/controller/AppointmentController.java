@@ -1,12 +1,10 @@
 package com.xlq.hospital.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.xlq.hospital.common.DateUtil;
 import com.xlq.hospital.common.IdUtil;
 import com.xlq.hospital.common.ResultObject;
-import com.xlq.hospital.model.Order;
-import com.xlq.hospital.model.Schedule;
-import com.xlq.hospital.model.TypeClass;
-import com.xlq.hospital.model.User;
+import com.xlq.hospital.model.*;
 import com.xlq.hospital.service.IUserService;
 import com.xlq.hospital.service.impl.AppointmentService;
 import org.apache.shiro.SecurityUtils;
@@ -214,6 +212,9 @@ public class AppointmentController {
 		Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
 		String userId = (String)session.getAttribute("userId");
+		if (StringUtils.isEmpty(scheduleDateBegin)){
+			scheduleDateBegin = DateUtil.getNowDate();
+		}
 		resultObject= appointmentService.queryScheduleByDoctorIdAndScheduleDate(page,limit,userId,scheduleDateBegin,scheduleDateEnd);
 		return  resultObject;
 
@@ -279,7 +280,7 @@ public class AppointmentController {
 		searchOrder.setStatus(status);
 		searchOrder.setAppointmentTimeBegin(appointmentTimeBegin);
 		searchOrder.setAppointmentTimeEnd(appointmentTimeEnd);
-
+		searchOrder.setDoctorId(userId);
 		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
 		return  resultObject;
 
@@ -292,10 +293,30 @@ public class AppointmentController {
 	public String doctorOrderEdit(){
 		return "doctor_order_edit";
 	}
-	@RequestMapping(value = "doctor/editOrder")
+
+	/**
+	 *   用户/医生 修改订单状态  （取消/爽约/评价）
+	 * @param order
+	 * @return
+	 */
+	@RequestMapping(value = "user/order/edit")
 	@ResponseBody
 	public ResultObject doctorEditOrder(Order order){
 		ResultObject resultObject = new ResultObject();
+		//订单完成状态，修改医生信息：评分  预约量
+		if("YWC".equals(order.getStatus())){
+			User doctor = userService.getUserByUserId(order.getDoctorId());
+			DoctorInfo doctorInfo = new DoctorInfo();
+			doctorInfo.setId(doctor.getDoctorInfo().getId());
+			//更新新评分   计算公式：新平均评分=(原平均评分*总数+新评分）/（总数+1）
+			doctorInfo.setScore((doctor.getDoctorInfo().getScore()*doctor.getDoctorInfo().getAppointmentCount()
+					+order.getScore())
+					/(doctor.getDoctorInfo().getAppointmentCount()+1));
+			//更新预约人数
+			doctorInfo.setAppointmentCount(doctor.getDoctorInfo().getAppointmentCount()+1);
+			int doctorResult = userService.updateDoctorInfoByUserId(doctorInfo);
+		}
+
 		int result = appointmentService.updateOrder(order);
 		if(result<0){
 			resultObject.setCode(-1);
@@ -306,8 +327,7 @@ public class AppointmentController {
 	}
 
 
-	/**
-	 * 用户订单列表
-	 */
+
+
 
 }

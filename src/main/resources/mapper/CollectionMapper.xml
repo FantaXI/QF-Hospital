@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlq.hospital.dao.CollectionDao" >
+  <resultMap id="BaseResultMap" type="com.xlq.hospital.model.MyCollection" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="VARCHAR" />
+    <result column="doctor_id" property="doctorId" jdbcType="VARCHAR" />
+    <result column="name" property="doctorName" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="collection_type" property="collectionType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from h_collection
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xlq.hospital.model.MyCollection" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into h_collection (id, patient_id, doctor_id, collection_type)
+    values (#{id}, #{patientId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR}, #{collectionType,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xlq.hospital.model.MyCollection" >
+    update h_collection
+    set patient_id = #{patientId,jdbcType=VARCHAR},
+      doctor_id = #{doctorId,jdbcType=VARCHAR},
+      collection_type = #{collectionType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, patient_id, doctor_id, collection_type, create_time, last_update_time
+    from h_collection
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, patient_id, doctor_id, collection_type, create_time, last_update_time
+    from h_collection
+  </select>
+  <select id="queryCollection" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.MyCollection" >
+    select hc.id, patient_id, doctor_id, collection_type, hc.create_time, hc.last_update_time,
+    hu.name, hd.department_name,hu.image_url
+    from h_collection hc
+    left join (h_user hu, h_department hd, h_doctor_info hdi)
+    on hc.doctor_id = hu.id and hc.doctor_id = hdi.user_id and hd.id = hdi.department_id
+    <where>
+      <if test="id!=null and id!=''">
+        and id = #{id,jdbcType=VARCHAR}
+      </if>
+      <if test="patientId!=null and patientId!=''">
+        and patient_id = #{patientId}
+      </if>
+      <if test="doctorId!=null and doctorId!=''">
+        and doctor_id = #{doctorId}
+      </if>
+    </where>
+  </select>
+
+</mapper>

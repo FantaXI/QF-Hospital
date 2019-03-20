@@ -53,6 +53,16 @@ public class Order implements Serializable {
 
     private String key;
 
+    private String departmentName;
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     public String getAppointmentTimeBegin() {
         return appointmentTimeBegin;
     }

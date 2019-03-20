@@ -83,12 +83,16 @@ margin:20px;}
 .commentDiv{
 border-bottom:3px solid #ccc;
 margin:40px;
+	padding: 20px;
 }
 .replyDiv{
 background-color: #F0F0F0;
 margin:20px;
 border:0.5px dashed #F0F0F0;;
 }
+ .input_div{
+	 margin-right: 230px;
+ }
 </style>
 <script th:inline="javascript">
 //格式化
@@ -279,13 +283,15 @@ $(document).ready(function (){
 
 </br></br>
 <form class="layui-form" th:action="@{/comment/addComment}">
-     <div class="layui-input-block">
-      <textarea name="commentContent" required lay-verify="required" placeholder="欢迎留言和咨询(不超过100字)" class="layui-textarea"  maxlength="100"></textarea>    
-    </div>
-    <div class="layui-input-block">
-      <button class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
-      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
+	<div class="input_div">
+		<div class="layui-input-block">
+			<textarea name="commentContent" required lay-verify="required" placeholder="欢迎留言和咨询(不超过100字)" class="layui-textarea"  maxlength="100"></textarea>
+		</div>
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
+			<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		</div>
+	</div>
     </form>
 <div class="layui-row content">
 

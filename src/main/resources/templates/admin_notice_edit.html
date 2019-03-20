@@ -111,7 +111,8 @@
 
 
         editor.ready(function() {//编辑器初始化完成再赋值
-            editor.setContent($("noticeContentTemp"));  //赋值给UEditor
+            console.log($(".noticeContentTemp").text());
+            editor.setContent($(".noticeContentTemp").text());  //赋值给UEditor
         });
 
 

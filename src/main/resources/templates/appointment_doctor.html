@@ -156,15 +156,20 @@
         <div style="margin: 30px;float: left;">
             <img th:src="${user.imageUrl}" style="width: 180px;height: 180px;">
         </div>
-        <div style="margin: 30px;float: left;width: 400px">
+        <div style="margin: 30px;float: left;width: 450px">
+            <span>所属部门:</span>
+            <a class="detail_box2" th:href="@{'/doctorlist/department/'+${user.doctorInfo.departmentId}}" th:text="${user.doctorInfo.departmentName}"></a>
+            <br><br>
             <span style="font-size: 30px" th:text="${user.name}"></span>&nbsp;&nbsp;
-            <span style="font-size: 15px;color: #c2c2c2;" th:text="${user.doctorInfo.professionalTitle}"></span><br><br>
+            <span style="font-size: 15px;color: #8C1E09;border:1px; background:#ECE2E0" th:text="${user.doctorInfo.professionalTitle}"></span><br><br>
             <span>医生简介：</span><span style="color: #a3b8c4;font-size: 13px;" th:text="${user.doctorInfo.doctorDesc}"></span><br><br>
             <span>擅长描述：</span><span style="color: #a3b8c4;font-size: 13px;"th:text="${user.doctorInfo.expertDesc}"></span><br><br>
         </div>
         <div style="margin: 30px 200px 30px 60px;float: right;background-color: #fff9ec;padding: 10px">
-            <span class="detail_box">评分：</span><span class="detail_box2" th:text="${user.doctorInfo.score}"></span><br>
+            <span class="detail_box">评    分：</span><span class="detail_box2" th:text="${user.doctorInfo.score}"></span><br>
             <span class="detail_box">预约量：</span><span class="detail_box2" th:text="${user.doctorInfo.appointmentCount}"></span><br>
+            <br>
+            <button id="myCollection" class="layui-btn layui-btn-warm layui-btn-radius"><i class="layui-icon"></i>收藏</button>
         </div>
     </div>
     <div class="ksorder_box">
@@ -195,9 +200,24 @@
 
 
 </body>
-<script>
-    layui.use('element', function(){
+<script th:inline="javascript">
+    layui.use(['element','layer'], function(){
+        layer = parent.layer === undefined ? layui.layer : top.layer,
+            $ = layui.jquery;
         var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        //点击收藏触发事件
+         $("#myCollection").click(function () {
+             $.post(/*[[@{/user/collection/add}]]*/,{
+                 doctorId : [[${user.id}]],
+             },function(res){
+                 if (res.code<0){
+                     layer.msg(res.msg);
+                 }else {
+                     layer.msg(res.msg);
+                 }
+             });
+         });
+
 
     });
 </script>

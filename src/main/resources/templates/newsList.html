@@ -61,7 +61,7 @@ function paging(curr,pageSize){
                 var val = obj[index];
                 var time = getformat(val.createTime,"yyyy-MM-dd");
                 var tr = $('<tr></tr>');
-                tr.append('<td><a href="noticeInfo?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;" height="40px">' + time + '</td>' );
+                tr.append('<td><a target="_blank" href="noticeInfo?id=' + val.id + '">'+(index+1)+'、'+ val.noticeTitle + '</a></td>' + '<td style="text-align:right;" height="40px">' + time + '</td>' );
                 tbody.append(tr);
             });
             $('#notice tbody').replaceWith(tbody);

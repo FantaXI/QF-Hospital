@@ -210,7 +210,7 @@
 </body>
 <script th:inline="javascript">
     //Demo
-    layui.use('form','element', function(){
+    layui.use(['form','element'], function(){
         var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
 
         var form = layui.form;
@@ -218,15 +218,16 @@
         //监听提交
         form.on('submit(appointmentInfo)', function(data){
             layer.msg(JSON.stringify(data.field));
+            var path = /*[[@{/}]]*/;
             var scheduleId = /*[[${schedule.id}]]*/;
             $.post(/*[[@{/appointment/submit}]]*/,{scheduleId:scheduleId,remark:data.field.remark},function (data) {
                 if (data.code<0){
-                    layer.msg(data.msg, {time:1000},function () {
-                        window.location.href = '/home/main'
+                    layer.msg(data.msg, {time:2000},function () {
+                        window.location.href = path+'/home/main'
                     })
                 }else{
-                    layer.msg("预约成功！要记得时间噢！即将跳转首页...", {time:1000},function () {
-                        window.location.href = '/home/main'
+                    layer.msg("预约成功！要记得时间噢！即将跳转首页...", {time:2000},function () {
+                        window.location.href = path+'/home/main'
                     })
                 }
             })

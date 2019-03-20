@@ -21,6 +21,7 @@
     <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -102,11 +103,11 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
-    patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee, 
-    treat_fee, result_desc, score, evaluate, "status", status_desc, create_time, last_update_time
-    from h_order
-    where id = #{id,jdbcType=VARCHAR}
+     select ho.id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile,
+    patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee,
+    treat_fee, result_desc, score, evaluate, status, status_desc, ho.create_time, ho.last_update_time,hd.department_name
+    from h_order ho,h_department hd
+    where ho.id = #{id,jdbcType=VARCHAR} and ho.department_id  = hd.id
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile, 
@@ -115,13 +116,14 @@
     from h_order
   </select>
   <select id="queryOrderByKey" resultMap="BaseResultMap" parameterType="com.xlq.hospital.model.Order" >
-    select id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile,
+    select ho.id, order_code, patient_id, doctor_id, department_id, doctor_name, doctor_mobile,
     patient_name, patient_mobile, patient_id_card, appointment_time, remark, appointment_fee,
-    treat_fee, result_desc, score, evaluate, status, status_desc, create_time, last_update_time
-    from (h_order)
+    treat_fee, result_desc, score, evaluate, status, status_desc, ho.create_time, ho.last_update_time,hd.department_name
+    from h_order ho,h_department hd
     <where>
+      ho.department_id  = hd.id
       <if test="key!=null and key!=''">
-        and ( id like CONCAT('%',#{key},'%') or doctor_name like CONCAT('%',#{key},'%') or
+        and ( ho.id like CONCAT('%',#{key},'%') or doctor_name like CONCAT('%',#{key},'%') or
         doctor_mobile like CONCAT('%',#{key},'%') or  patient_name like CONCAT('%',#{key},'%') or
         patient_mobile like CONCAT('%',#{key},'%') or  patient_id_card like CONCAT('%',#{key},'%') )
       </if>
@@ -134,7 +136,6 @@
       <if test="status!=null and status !=''">
         and status = #{status,jdbcType=VARCHAR}
       </if>
-
 
       <if test="id!=null and id!=''">
         and id = #{id}
@@ -149,31 +150,25 @@
         and department_id = #{departmentId}
       </if>
       <if test="doctorName!=null and doctorName!=''">
-        and doctor_name = #{doctorName,jdbcType=VARCHAR},
+        and doctor_name like CONCAT('%',#{doctorName,jdbcType=VARCHAR},'%')
       </if>
       <if test="doctorMobile!=null and doctorMobile!=''">
-        and doctor_mobile = #{doctorMobile,jdbcType=VARCHAR},
+        and doctor_mobile like CONCAT('%',#{doctorMobile,jdbcType=VARCHAR},'%')
       </if>
       <if test="patientName!=null and patientName!=''">
-         and patient_name = #{patientName,jdbcType=VARCHAR},
+         and patient_name like CONCAT('%',#{patientName,jdbcType=VARCHAR},'%')
       </if>
       <if test="patientMobile!=null and patientMobile!=''">
-         and patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+         and patient_mobile like CONCAT('%',#{patientMobile,jdbcType=VARCHAR},'%')
       </if>
       <if test="patientIdCard!=null and patientIdCard!=''">
-         and patient_id_card = #{patientIdCard,jdbcType=DATE},
+         and patient_id_card like CONCAT('%',#{patientIdCard,jdbcType=DATE},'%')
       </if>
       <if test="appointmentTime!=null and appointmentTime!=''">
-        and appointment_time = #{appointmentTime,jdbcType=DATE},
+        and appointment_time = #{appointmentTime,jdbcType=DATE}
       </if>
       <if test="remark!=null and remark!=''">
-        and remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="patientMobile!=null and patientMobile!=''">
-        and  patient_mobile = #{patientMobile,jdbcType=VARCHAR},
-      </if>
-      <if test="patientMobile!=null and patientMobile!=''">
-        and patient_mobile = #{patientMobile,jdbcType=VARCHAR},
+        and remark = #{remark,jdbcType=VARCHAR}
       </if>
     </where>
   </select>

@@ -26,6 +26,7 @@
             <div class="layui-inline">
                 <a class="layui-btn layui-btn-normal addNews_btn">添加排班设置</a>
             </div>
+            <p>（只能查看和添加未来30天内的排班）</p>
             <!--div class="layui-inline">
                 <a class="layui-btn layui-btn-danger layui-btn-normal delAll_btn">批量删除</a>
             </div-->
@@ -101,10 +102,14 @@
             table = layui.table;
         //执行一个laydate实例
         laydate.render({
-            elem: '#scheduleDateBegin' //指定元素
+            elem: '#scheduleDateBegin', //指定元素
+            min: 0, //0天前
+            max: 30, //30天后
         });
         laydate.render({
-            elem: '#scheduleDateEnd' //指定元素
+            elem: '#scheduleDateEnd' ,//指定元素
+            min: 0, //0天前
+            max: 30, //30天后
         });
         //列表
         var tableIns = table.render({
