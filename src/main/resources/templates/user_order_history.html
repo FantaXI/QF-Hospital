@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>用户病史查看</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" type="text/css">
+    <script language="JavaScript" th:src="@{/js/jquery-3.2.1.js}"></script>
+    <script th:src="@{/layui/layui.js}"></script>
+    <style>
+        .main_div{
+            width: 800px;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            border: solid 1px darkcyan;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="main_div">
+<div class="user_info">
+    <span>用户姓名:</span><span th:text="${patient.name}"></span><br>
+    <span>用户电话:</span><span th:text="${patient.mobile}"></span>
+    <br>
+    <br>
+</div>
+    <ul class="layui-timeline">
+<div th:each="order : ${orderList}">
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title" th:text="${#dates.format(order.appointmentTime, 'yyyy年MM月dd日')}"></h3>
+            <span style="color: #0C0C0C;">订单编号：</span><span th:text="${order.id}"></span>
+            <br><br>
+            <span style="color: #0C0C0C;">科室：</span><span th:text="${order.departmentName}"></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: #0C0C0C;">诊治医生：</span><span th:text="${order.doctorName}"></span>
+            <br><br>
+            <span style="color: #0C0C0C;">病情描述：</span>
+            <p th:text="${order.remark}"> </p>
+            <br>
+            <span style="color: #0C0C0C;">诊治结果：</span>
+            <p th:text="${order.resultDesc}"></p>
+            <br>
+        </div>
+    </li>
+</div>
+    </ul>
+</div>
+</body>
+</html>

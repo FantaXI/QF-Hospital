@@ -153,7 +153,7 @@ function paging(curr,pageSize){
             		var replyTime = getformat(replyObj[index1].createTime,"yyyy-MM-dd hh:mm:ss");
             		var orderBy = '#'+(index1+1)+'楼' ;
             		
-        			replyHtml += '<div class="replyDiv" id="reply' + index1 + '" ><p>'+orderBy+space+replyObj[index1].userName+space+replyTime+'</p></br><p>'+space+space+space+space+replyObj[index1].commentContent+"</p></br></div>";
+        			replyHtml += '<div class="replyDiv" id="reply' + index1 + '" ><p>'+orderBy+space+replyObj[index1].userName.substr(0, 1)+'**'+space+replyTime+'</p></br><p>'+space+space+space+space+replyObj[index1].commentContent+"</p></br></div>";
         			
         		}); 
         		
@@ -161,7 +161,7 @@ function paging(curr,pageSize){
         		              '" style="display:none"></br><textarea id="textArea' + index +
         		              '" required lay-verify="required" placeholder="此处输入回复(不超过100字)" class="layui-textarea" maxlength="100"></textarea><input type="button" id='+obj[index].id+' class="layui-btn layui-btn-xs layui-btn-warm submitApply" value="提交"></input></div>';
         		              
-        		$("#comment").append("<div id='comment" + index +"' class='commentDiv'><i class='layui-icon layui-icon-user' >"+obj[index].userName+space+createTime+"</i></br></br><p>"+obj[index].commentContent+"</p>"+replyInputHtml+replyHtml+"</div>");
+        		$("#comment").append("<div id='comment" + index +"' class='commentDiv'><i class='layui-icon layui-icon-user' >"+obj[index].userName.substr(0, 1)+'**'+space+createTime+"</i></br></br><p>"+obj[index].commentContent+"</p>"+replyInputHtml+replyHtml+"</div>");
         		
       		
         		});

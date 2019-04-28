@@ -94,16 +94,33 @@
         .schedule_table{
             display: inline;
             float: left;
-
         }
         .detail_day{
             margin: 30px 0 0 0 ;
-            background-color: #01AAED;
+            background-color: #009688;
             padding: 15px;
+            font-size: 14px;
         }
         .detail_day2{
-            background-color: #92B8B1;
+            background-color: #899396;
             padding: 15px;
+            font-size: 14px;
+        }
+        .img_div{
+            float: left;
+            padding: 20px;
+        }
+        .content_div{
+            margin: 30px 0 0 60px;
+        }
+        .score_span{
+            font-size: 20px;
+            color: #eb7350;
+        }
+        .main_div{
+            margin: 10px ;
+            border: 1px solid #eaeaea;
+            height: 120px;
         }
     </style>
 
@@ -189,6 +206,27 @@
 
         </div>
     </div>
+    <div>
+        <h1>用户评价</h1>
+        <div class="evaluate_div">
+            <div class="main_div">
+                <div class="img_div">
+                    <img th:src="@{/images/default_image.jpg}" style="width: 50px;height: 50px"><br>
+                    <span>姓名</span>
+                </div>
+                <div class="content_div">
+                    <span>评分:</span><span class="score_span">10</span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>2018-9-9</span><br>
+                    <div>
+                        <span>评价内容</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id= "evaluatePage"></div>
+    </div>
 
 
 
@@ -200,8 +238,51 @@
 
 
 </body>
-<script th:inline="javascript">
-    layui.use(['element','layer'], function(){
+<script type="text/javascript" th:inline="javascript">
+    //格式化
+    Date.prototype.format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+
+        return fmt;
+    }
+
+    //返回格式化时间
+    function getformat(date,format){
+        var dateformat=''
+        var DateTimeReg = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
+        if(date){
+            if(typeof date === 'string' && DateTimeReg.test(date)) {
+                //IE浏览器的Date.parse方法的实现要求参数是RFC2822或ISO 8601格式
+                //现在系统常用的格式之一：2018-01-01 06:30:30不能正常转换
+                //如下转换后IE下的Date.parse可以正常执行
+                date = date.replace(' ', 'T')
+
+                // 360浏览器的极速模式在解析时间字符串时会将该字符串视为UTC时间
+                // 然后在生成时间对象的时候按照北京时间（GMT+0800）来生成
+                // 所以会导致小时数+8，从而显示异常
+                // 如下处理，手动声明该时间字符串为北京时间，避免时区的转换
+                date = date + '+08:00';
+            }
+
+            dateformat=new Date(date).format(format);
+        }
+        return dateformat;
+    }
+
+
+    layui.use(['laypage','element','layer'], function(){
+        var laypage = layui.laypage;
         layer = parent.layer === undefined ? layui.layer : top.layer,
             $ = layui.jquery;
         var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
@@ -217,6 +298,64 @@
                  }
              });
          });
+         paging(1,10);
+
+       function paging(curr,limit) {
+           $.ajax({
+               url: /*[[@{/appointment/evaluate/list}]]*/,
+               type: "post",
+               data: {'page': curr || 1, 'limit': limit || 10, 'doctorId': [[${user.id}]], 'status': 'YWC'},
+               success: function (data) {
+                   var obj = eval(data.data);
+                   var str = '';
+                   $(obj).each(function (index) {
+                       var val = obj[index];
+                       var appointmentTime = getformat(val.appointmentTime, "yyyy-MM-dd");
+                       var name = val.patientName.substring(0,1)+'**';
+                       var evaluateContent = val.evaluate;
+                       var score = val.score;
+                       str += '<div class="evaluate_div">'+
+                           '<div class="main_div">'+
+                           '<div class="img_div">'+
+                           '<img src="http://120.78.143.104:8082/test/51e22e1e485b.jpg" style="width: 50px;height: 50px"><br>'+
+                           '<span>'+name+'</span>'+
+                           '</div>'+
+                           '<div class="content_div">'+
+                           '<span>评分:</span><span class="score_span">'+score+'</span>'+
+                       '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>'+
+                       '<span>'+appointmentTime+'</span><br>'+
+                       '<div>'+
+                       '<span>'+evaluateContent+'</span>'+
+                       '</div> </div> </div> </div>';
+                   });
+                   $('.evaluate_div').html(str);
+
+                   //var count=data.count;//总记录
+                   //var curr= curr; //当前页
+                   //var limit=10; //每页几个
+                   //调用分页方法
+
+                   //完整功能
+                   laypage.render({
+                       elem: 'evaluatePage',
+                       count: data.count || 0,
+                       theme: '#009587',
+                       limit: limit || 10,
+                       curr: data.page || 1,
+                       layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip'],
+                       jump: function (obj, first) {
+                           //debugger;
+                           if (!first) {
+                               paging(obj.curr, obj.limit);
+                           }
+                       }
+                   });
+               },
+               error: function () {
+                   alert("错误");
+               }
+           });
+       }
 
 
     });

@@ -138,7 +138,7 @@
       </if>
 
       <if test="id!=null and id!=''">
-        and id = #{id}
+        and ho.id = #{id}
       </if>
       <if test="doctorId!=null and doctorId!=''">
         and doctor_id = #{doctorId}
@@ -171,5 +171,6 @@
         and remark = #{remark,jdbcType=VARCHAR}
       </if>
     </where>
+    order by appointment_time desc
   </select>
 </mapper>

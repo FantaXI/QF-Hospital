@@ -41,13 +41,13 @@
         <div class="magb15 layui-col-md6 layui-col-xs12">
             <label class="layui-form-label">创建时间</label>
             <div class="layui-input-block">
-                <p  th:text="${#dates.format(order.createTime, 'yyyy/MM/dd dd:MM:ss')}" class="info_font" ></p>
+                <p  th:text="${#dates.format(order.createTime, 'yyyy/MM/dd HH:mm:ss')}" class="info_font" ></p>
             </div>
         </div>
         <div class="magb15 layui-col-md6 layui-col-xs12">
             <label class="layui-form-label">最后更改时间</label>
             <div class="layui-input-block">
-                <p  th:text="${#dates.format(order.lastUpdateTime, 'yyyy/MM/dd dd:MM:ss')}" class="info_font" ></p>
+                <p  th:text="${#dates.format(order.lastUpdateTime, 'yyyy/MM/dd HH:mm:ss')}" class="info_font" ></p>
             </div>
         </div>
     </div>
@@ -98,6 +98,12 @@
         <label class="layui-form-label">身份证号</label>
         <div class="layui-input-block">
             <p  th:text="${order.patientIdCard}" class="info_font" ></p>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row layui-col-xs12">
+        <label class="layui-form-label">预约备注</label>
+        <div class="layui-input-block">
+            <p  th:text="${order.remark}" class="info_font"></p>
         </div>
     </div>
     <div class="layui-form-item layui-row layui-col-xs12">
@@ -215,7 +221,6 @@
                     statusDesc = '用户取消';
                 }
                 //弹出loading
-                var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
                 $.post(/*[[@{/user/order/edit}]]*/,{
                     id : [[${order.id}]],
                     score: score||10,
@@ -228,11 +233,11 @@
                     if (res.code<0){
                         top.layer.msg(res.msg);
                     }else {
-                        top.layer.close(index);
-                        top.layer.msg("成功！");
-                        layer.closeAll("iframe");
-                        //刷新父页面
-                        parent.location.reload();
+                        layer.msg("成功！",{time:'1000'},function () {
+                            //刷新父页面
+                            parent.location.reload();
+                        });
+
                     }
                 })
 

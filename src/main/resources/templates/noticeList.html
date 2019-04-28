@@ -94,7 +94,6 @@ function paging(curr,pageSize){
             var count=data.totalSize;//总记录
             var curr=data.pageNum; //当前页
             var limit=10; //每页几个
-            console.log(data.totalSize);
             //调用分页方法
             getPageList(count,curr,limit);
         }
@@ -197,7 +196,8 @@ body {
 .notice {}
 .news{}
 
-.main{border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;
+.main{border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;padding-left: 15px;
+
 }
 </style>
 

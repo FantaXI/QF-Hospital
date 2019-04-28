@@ -172,7 +172,8 @@
     from h_user u , h_patient_info pi
     where u.role_type = "1" and u.id = pi.user_id
     <if test="key!=null">
-      and (u.name like CONCAT('%',#{key},'%') or u.mobile like CONCAT('%',#{key},'%') or u.email like CONCAT('%',#{key},'%') or pi.address like CONCAT('%',#{key},'%'))
+      and (u.name like CONCAT('%',#{key},'%') or u.mobile like CONCAT('%',#{key},'%')
+      or u.email like CONCAT('%',#{key},'%') or pi.address like CONCAT('%',#{key},'%'))
     </if>
   </select>
   <select id="queryDoctorList" resultMap="DoctorResultMap" parameterType="java.lang.String" >

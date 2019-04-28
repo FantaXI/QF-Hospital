@@ -445,6 +445,8 @@ public class AdminController {
 		//插入patientInfo表
 		doctorInfo.setId(doctorId);
 		doctorInfo.setUserId(userId);
+		doctorInfo.setScore(0L);
+		doctorInfo.setAppointmentCount(0);
 		userService.addDoctorInfo(doctorInfo);
 
 		return resultObject;
@@ -686,6 +688,16 @@ public class AdminController {
 		searchOrder.setAppointmentTimeEnd(appointmentTimeEnd);
 		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
 		return  resultObject;
+	}
+
+	@RequestMapping(value = "admin/order/edit")
+	public String adminOrderEdit(){
+		return "admin_order_edit";
+	}
+
+	@RequestMapping(value = "admin/order/history/list")
+	public String adminOrderHistory(){
+		return "admin_order_history_list";
 	}
 
 

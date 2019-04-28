@@ -19,7 +19,7 @@
     <!-- 顶部 -->
     <div class="layui-header header">
         <div class="layui-main mag0">
-            <a href="#" class="logo">管理系统</a>
+            <a href="#" class="logo">后台管理系统</a>
             <!-- 显示/隐藏菜单 -->
             <a href="javascript:;" class="seraph hideMenu icon-caidan"></a>
             <!-- 顶级菜单 -->
@@ -36,9 +36,9 @@
                 <li class="layui-nav-item layui-this" data-menu="contentManagement">
                     <a href="javascript:;"><i class="layui-icon" data-icon="&#xe63c;">&#xe63c;</i><cite>管理中心</cite></a>
                 </li>
-                <li class="layui-nav-item" data-menu="memberCenter" pc>
-                    <a href="javascript:;"><i class="seraph icon-icon10" data-icon="icon-icon10"></i><cite>医生中心</cite></a>
-                </li>
+                <!--<li class="layui-nav-item" data-menu="memberCenter" pc>-->
+                    <!--<a href="javascript:;"><i class="seraph icon-icon10" data-icon="icon-icon10"></i><cite>医生中心</cite></a>-->
+                <!--</li>-->
             </ul>
             <!-- 顶部右侧菜单 -->
             <ul class="layui-nav top_menu">
@@ -46,12 +46,12 @@
                     <a href="javascript:;" class="clearCache"><i class="layui-icon" data-icon="&#xe640;">&#xe640;</i><cite>清除缓存</cite><span class="layui-badge-dot"></span></a>
                 </li>
                 <li class="layui-nav-item" id="userInfo">
-                    <a href="javascript:;"><img src="/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35">
+                    <a href="javascript:;"><img src="../images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35">
                         <cite class="adminName"><span th:text="${session.user.name}"></span></cite></a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;" data-url="page/user/userInfo.html"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
                         <dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>
-                        <dd><a href="page/login/login.html" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
+                        <dd><a th:href="@{/logout}" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
                     </dl>
                 </li>
             </ul>
@@ -61,7 +61,7 @@
     <div class="layui-side layui-bg-black">
         <div class="user-photo">
             <a class="img" title="我的头像" ><img src="../images/face.jpg" class="userAvatar"></a>
-            <p>你好！<span class="userName">管理员</span>, 欢迎登录</p>
+            <p>你好！ 欢迎登录</p>
         </div>
         <!-- 搜索 -->
         <div class="layui-form component">
@@ -132,8 +132,6 @@
                     <dl class="layui-nav-child">
                         <dd><a data-url="../doctor/schedule/list"><cite>工作排期</cite></a></dd>
                         <dd><a data-url="../doctor/order/list"><cite>预约订单</cite></a></dd>
-                        <dd><a data-url=""><cite>发表公告/新闻</cite></a></dd>
-                        <dd><a data-url=""><cite>留言管理</cite></a></dd>
                     </dl>
                 </li>
             </ul>

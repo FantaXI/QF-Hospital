@@ -171,7 +171,7 @@
     <div class="layui-form-item layui-row layui-col-xs12">
         <label class="layui-form-label">密码*</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input userPassword" lay-verify="required" placeholder="请输入密码">
+            <input type="password" class="layui-input userPassword" lay-verify="required" placeholder="请输入密码">
         </div>
     </div>
     <div class="layui-form-item layui-row layui-col-xs12">
@@ -265,8 +265,11 @@
                 if (res.code < 0) {
                     layer.msg(res.msg);
                 } else {
+                    /*<![CDATA[*/
+                    var loginhref= /*[[@{/login}]]*/;
+                    /*]]>*/
                     layer.msg("注册成功！即将跳到登录页",{time:2000},function () {
-                        window.location.href="/login";
+                        window.location.href=loginhref;
                     });
 
                 }

@@ -25,13 +25,16 @@
                 </div>
                 <div class="layui-input-inline" style="width:180px">
                     <select id ="department" name="department" lay-filter="department"  lay-search>
-                        <option value=''>请选择科室</option>
+                        <option value=''>选择科室</option>
                     </select>
                 </div>
                 <div class="layui-input-inline" style="width:180px">
                     <select id="doctor" name="doctor" lay-filter="doctor" lay-search>
-                        <option value=''>请选择医生</option>
+                        <option value=''>选择医生</option>
                     </select>
+                </div>
+                <div class="layui-input-inline" >
+                    <input type="text" class="layui-input id" style="width: 180px" placeholder="订单编号" />
                 </div>
             </div>
 
@@ -39,7 +42,7 @@
             <div class="layui-inline">
                 <div class="layui-input-inline" style="width:180px">
                     <select id="status" name="status" style="width: 180px" lay-verify="">
-                        <option value="">选择订单状态</option>
+                        <option value="">订单状态</option>
                         <option value="DZZ">待诊治</option>
                         <option value="DPJ">待评价</option>
                         <option value="YWC">已完成</option>
@@ -48,19 +51,19 @@
                     </select>
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input patientName" style="width: 180px" placeholder="输入患者姓名搜索" />
+                    <input type="text" class="layui-input patientName" style="width: 180px" placeholder="患者姓名" />
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input patientMobile" style="width: 180px" placeholder="输入患者电话搜索" />
+                    <input type="text" class="layui-input patientMobile" style="width: 180px" placeholder="患者电话" />
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input patientIdCard" style="width: 180px" placeholder="输入患者身份证号搜索" />
+                    <input type="text" class="layui-input patientIdCard" style="width: 180px" placeholder="患者身份证号" />
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input doctorName" style="width: 180px" placeholder="输入医生姓名搜索" />
+                    <input type="text" class="layui-input doctorName" style="width: 180px" placeholder="医生姓名" />
                 </div>
                 <div class="layui-input-inline" >
-                    <input type="text" class="layui-input doctorMobile" style="width: 180px" placeholder="输入医生电话搜索" />
+                    <input type="text" class="layui-input doctorMobile" style="width: 180px" placeholder="医生电话" />
                 </div>
             </div>
             <a class="layui-btn search_btn" data-type="reload">搜索</a>
@@ -120,11 +123,13 @@
         return dateformat;
     }
 
-
+    var historyUrl = /*[[@{/user/order/history/}]]*/;
     var col = [
         {field: 'id', title: '订单编号', minWidth:100, align:"center"},
         {field: 'appointmentTime', title: '预约门诊日期', minWidth:100, align:'center',templet:function(d){return getformat(d.appointmentTime,"yyyy/MM/dd")}},
-        {field: 'patientName', title: '患者姓名', minWidth:100, align:'center'},
+        {field: '', title: '患者姓名', minWidth:100, align:'center',templet:function(d){
+                return '<a style="color: #2D93CA;" href="'+historyUrl+d.patientId+'" target="_blank">'+d.patientName+'</a>';
+            }},
         {field: 'patientMobile', title: '患者电话', minWidth:100, align:'center'},
         {field: 'patientIdCard', title: '患者身份证号', minWidth:100, align:'center',templet:function(d){return d.patientIdCard+"元"}},
         {field: '', title: '预约费用', minWidth:100, align:'center',templet:function(d){return d.appointmentFee+"元"}},
@@ -166,6 +171,7 @@
                     curr: 1 //重新从第 1 页开始
                 },
                 where: {
+                    id:$(".id").val(),
                     departmentId:$("#department").val(),
                     doctorId:$("#doctor").val(),
                     doctorName:$(".doctorName").val(),
@@ -247,6 +253,7 @@
                         body.find(".patientName").val(edit.patientName);
                         body.find(".patientMobile").val(edit.patientMobile);
                         body.find(".patientIdCard").val(edit.patientIdCard);
+                        body.find(".doctorId").val(edit.doctorId);
                         body.find(".doctorName").val(edit.doctorName);
                         body.find(".doctorMobile").val(edit.doctorMobile);
                         body.find(".remark").val(edit.remark);
@@ -256,6 +263,7 @@
                         body.find(".evaluate").val(edit.evaluate);
                         body.find(".createTime").val(getformat(edit.createTime,"yyyy-MM-dd hh:mm:ss"));
                         body.find(".lastUpdateTime").val(getformat(edit.lastUpdateTime,"yyyy-MM-dd hh:mm:ss"));
+                        body.find(".remark").val(edit.remark);
                         form.render();
                     }
                     setTimeout(function(){

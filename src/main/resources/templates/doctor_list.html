@@ -196,21 +196,20 @@
     <div>
         <div class="g-doctor-item1"  th:each="doctor : ${doctorList}">
             <div style="display: inline-block"  class="g-doctor-item2">
-              <img th:src="${doctor.imageUrl}" height="60" width="60">
-                <a  th:text="${doctor.name}"></a>
-                <span th:text="${doctor.doctorInfo.professionalTitle}"></span>
+              <img th:src="${doctor.imageUrl}" height="100" width="100">
+                <a  style="font-size: 20px" th:text="${doctor.name}"></a>
+                <span style="border:1px; background:#ffffaa" th:text="${doctor.doctorInfo.professionalTitle}"></span>
             </div>
             <div style="display: inline-block" class="g-doctor-item3" >
                 <strong>擅长:</strong>
                 <p th:text="${doctor.doctorInfo.expertDesc}"></p>
             </div>
             <div style="display: inline-block" class="g-doctor-item4">
-                <div><span>评分：</span><p  style="display:inline;" th:text="${doctor.doctorInfo.score}"></p></div>
-                <div>问诊量：<p style="display:inline;" th:text="${doctor.doctorInfo.appointmentCount}"></p></div>
-                <div>收藏数：</div>
+                <div><span>评分：</span><p  style="display:inline;font-size: 18px;color: #01AAED;" th:text="${doctor.doctorInfo.score}"></p></div>
+                <div>问诊量：<p style="display:inline;font-size: 18px;color: #01AAED;" th:text="${doctor.doctorInfo.appointmentCount}"></p></div>
             </div>
             <div style="display: inline-block" >
-                <a th:href="@{/appointment/doctor/{id}(id=${doctor.id})}" >预约</a>
+                <a class="layui-btn layui-btn-normal layui-btn-lg layui-btn-radius" th:href="@{/appointment/doctor/{id}(id=${doctor.id})}" >预约</a>
             </div>
         </div>
     </div>

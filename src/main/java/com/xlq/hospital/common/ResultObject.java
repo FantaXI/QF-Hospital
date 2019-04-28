@@ -10,8 +10,18 @@ public class ResultObject {
 	private String msg;
 	//数据总数
 	private int count;
+	//当前页
+	private int page;
 	//数据
 	private Object data;
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 
 	public int getCode() {
 		return code;

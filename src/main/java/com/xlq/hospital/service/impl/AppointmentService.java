@@ -228,6 +228,7 @@ public class AppointmentService {
 		int total = (int)pageInfo.getTotal(); //获取总记录数
 		resultObject.setCount(total);
 		resultObject.setData(list);
+		resultObject.setPage(page);
 		return resultObject;
 	}
 
@@ -237,5 +238,13 @@ public class AppointmentService {
 
 	public Order queryOrderById(String id){
 		return orderDao.selectByPrimaryKey(id);
+	}
+
+	public List<Order> queryOrderHistoryByPatientId(String id){
+		Order order = new Order();
+		order.setPatientId(id);
+		order.setStatus("YWC");
+		List<Order> list = orderDao.queryOrderByKey(order);
+		return list;
 	}
 }

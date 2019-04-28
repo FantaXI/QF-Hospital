@@ -40,7 +40,6 @@ public class UserController {
 	@Autowired
 	private CollectionService collectionService;
 
-
 	@RequestMapping("login")
 	public String login() {
 		return "login";
@@ -114,6 +113,8 @@ public class UserController {
 		Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
 		String userId = (String)session.getAttribute("userId");
+		//用户未登录
+
 		User user = userService.getUserByUserId(userId);
 		modelAndView.addObject("currentUser", user);
 		modelAndView.setViewName("mine");

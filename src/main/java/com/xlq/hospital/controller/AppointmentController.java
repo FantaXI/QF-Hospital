@@ -119,6 +119,10 @@ public class AppointmentController {
 		Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
 		String userId = (String)session.getAttribute("userId");
+		if(userId==null){
+			mv.setViewName("redirect:/login");
+			return mv;
+		}
 		//获取当前登录用户信息
 		User currentUser = userService.getUserByUserId(userId);
 
@@ -301,10 +305,11 @@ public class AppointmentController {
 	 */
 	@RequestMapping(value = "user/order/edit")
 	@ResponseBody
-	public ResultObject doctorEditOrder(Order order){
+	public ResultObject doctorEditOrder(Order order, String isAdmin){
 		ResultObject resultObject = new ResultObject();
 		//订单完成状态，修改医生信息：评分  预约量
-		if("YWC".equals(order.getStatus())){
+
+		if("YWC".equals(order.getStatus())&&StringUtils.isEmpty(isAdmin)){
 			User doctor = userService.getUserByUserId(order.getDoctorId());
 			DoctorInfo doctorInfo = new DoctorInfo();
 			doctorInfo.setId(doctor.getDoctorInfo().getId());
@@ -324,6 +329,31 @@ public class AppointmentController {
 			return resultObject;
 		}
 		return  resultObject;
+	}
+
+	/**
+	 * 获取医生评价列表
+	 */
+	@RequestMapping(value = "appointment/evaluate/list")
+	@ResponseBody
+	public ResultObject evaluateListByDoctor(int page, int limit,Order searchOrder){
+		ResultObject resultObject = new ResultObject();
+		resultObject= appointmentService.queryOrderByKey(page,limit,searchOrder);
+		return resultObject;
+	}
+
+	/**
+	 * 查看用户病史
+	 */
+	@RequestMapping(value = "user/order/history/{id}")
+	public ModelAndView userOrderHistory(@PathVariable String id){
+		ModelAndView mv = new ModelAndView();
+		User user = userService.getUserByUserId(id);
+		List<Order> orderList = appointmentService.queryOrderHistoryByPatientId(id);
+		mv.addObject("orderList",orderList);
+		mv.addObject("patient",user);
+		mv.setViewName("user_order_history");
+		return mv;
 	}
 
 

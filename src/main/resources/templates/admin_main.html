@@ -13,46 +13,38 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all" />
 </head>
 <body class="childrenBody">
-<div class="layui-upload">
-    <div class="myImage" style="border:1px solid #0C0C0C; width:185px; height:185px">
-        <img class="layui-upload-img" id="demo1" style="width: auto;height: auto;max-width: 100%;max-height: 100%;">
-    </div>
-    <div class="layui-upload-list">
-        <button type="button" class="layui-btn layui-btn-normal" id="selectPic">选择图片</button>
-        <button type="button" class="layui-btn" id="uploadPic">确认更改</button>
-    </div>
-</div>
+<h1>欢迎登录医院门诊预约系统后台管理系统</h1>
 
 </body>
 <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
-<script th:inline="javascript">
-    layui.use('upload', function() {
-        var $ = layui.jquery
-            , upload = layui.upload
-        //创建一个上传组件
-        upload.render({
-            elem: '#selectPic',
-            //url: /*[[@{/ftp/uploadPic}]]*/ ,
-            url: /*[[@{/ftp/uploadPic}]]*/,
-            data:{
-                type:'user',
-                id:'11'
-            },
-            auto: false,
-            bindAction: '#uploadPic',
-            choose: function (obj) {
-                var files = obj.pushFile();
-                //预览选中的文件（本地文件）
-                obj.preview(function (index, file, result) {
-                    $('#demo1').attr('src', result);
-                });
-            },
-            done: function (res, index, upload) { //上传后的回调
-                $('#demo1').attr('src', res.data.src);
-            }
+<!--<script th:inline="javascript">-->
+    <!--layui.use('upload', function() {-->
+        <!--var $ = layui.jquery-->
+            <!--, upload = layui.upload-->
+        <!--//创建一个上传组件-->
+        <!--upload.render({-->
+            <!--elem: '#selectPic',-->
+            <!--//url: /*[[@{/ftp/uploadPic}]]*/ ,-->
+            <!--url: /*[[@{/ftp/uploadPic}]]*/,-->
+            <!--data:{-->
+                <!--type:'user',-->
+                <!--id:'11'-->
+            <!--},-->
+            <!--auto: false,-->
+            <!--bindAction: '#uploadPic',-->
+            <!--choose: function (obj) {-->
+                <!--var files = obj.pushFile();-->
+                <!--//预览选中的文件（本地文件）-->
+                <!--obj.preview(function (index, file, result) {-->
+                    <!--$('#demo1').attr('src', result);-->
+                <!--});-->
+            <!--},-->
+            <!--done: function (res, index, upload) { //上传后的回调-->
+                <!--$('#demo1').attr('src', res.data.src);-->
+            <!--}-->
 
-        });
-    });
-</script>
+        <!--});-->
+    <!--});-->
+<!--</script>-->
 </body>
 </html>

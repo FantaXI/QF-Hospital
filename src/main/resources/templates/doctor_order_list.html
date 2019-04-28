@@ -93,11 +93,13 @@
         return dateformat;
     }
 
-
+    var historyUrl = /*[[@{/user/order/history/}]]*/;
     var col = [
         {field: 'id', title: '订单编号', minWidth:100, align:"center"},
         {field: 'appointmentTime', title: '预约门诊日期', minWidth:100, align:'center',templet:function(d){return getformat(d.appointmentTime,"yyyy/MM/dd")}},
-        {field: 'patientName', title: '患者姓名', minWidth:100, align:'center'},
+        {field: 'patientName', title: '患者姓名', minWidth:100, align:'center',templet:function(d){
+          return '<a style="color: #2D93CA;" href="'+historyUrl+d.patientId+'" target="_blank">'+d.patientName+'</a>';
+        }},
         {field: 'patientMobile', title: '患者电话', minWidth:100, align:'center'},
         {field: 'patientIdCard', title: '患者身份证号', minWidth:100, align:'center',templet:function(d){return d.patientIdCard+"元"}},
         {field: '', title: '预约费用', minWidth:100, align:'center',templet:function(d){return d.appointmentFee+"元"}},
@@ -197,6 +199,7 @@
                         body.find(".evaluate").val(edit.evaluate);
                         body.find(".createTime").val(getformat(edit.createTime,"yyyy-MM-dd hh:mm:ss"));
                         body.find(".lastUpdateTime").val(getformat(edit.lastUpdateTime,"yyyy-MM-dd hh:mm:ss"));
+                        body.find(".remark").text(edit.remark),
                         form.render();
                     }
                     setTimeout(function(){
